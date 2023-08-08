@@ -6,6 +6,19 @@ import plotly.graph_objects as go
 
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
+feat_num = []
+feat_obj = []
+
+for iclm in data.columns.to_list():
+    try:
+        pd.to_numeric(data[iclm])
+        feat_num.append(iclm)
+    except (ValueError, TypeError):
+        feat_obj.append(iclm)
+        
+data[feat_num] = data[feat_num].astype(float)  
+
+
 def aggregated_performance_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
     fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
@@ -41,7 +54,7 @@ def customer_accounts_view(data, selected_item):
     selected_associate = st.selectbox('Select Customer Success Associate:', filtered_data['Customer Success Associate'].unique())
     associate_data = filtered_data[filtered_data['Customer Success Associate'] == selected_associate]
     st.dataframe(associate_data[['Unique Location ID', 'Health_Score']])
-    st.dataframe(associate_data.groupby('Customer Success Associate').mean())
+    st.dataframe(associate_data[feat_num].groupby('Customer Success Associate').mean())
     
     fig = px.bar(associate_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores for {selected_associate}',
