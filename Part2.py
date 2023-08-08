@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-data = pd.read_excel('/Users/anniefu/Documents/Otter_Case/Data_Score.xlsx').iloc[:,1:]
+data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
 def aggregated_performance_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
