@@ -54,7 +54,9 @@ def customer_accounts_view(data, selected_item):
     selected_associate = st.selectbox('Select Customer Success Associate:', filtered_data['Customer Success Associate'].unique())
     associate_data = filtered_data[filtered_data['Customer Success Associate'] == selected_associate]
     st.dataframe(associate_data[['Unique Location ID', 'Health_Score']])
-    st.dataframe(associate_data.groupby('Customer Success Associate')[feat_num].mean())
+
+    st.subheader("Associate Aggregate Information")
+    st.dataframe(associate_data.groupby('Customer Success Associate')[feat_num].sum())
     
     fig = px.bar(associate_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores for {selected_associate}',
