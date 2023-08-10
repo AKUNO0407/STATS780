@@ -3,8 +3,15 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-
+credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
+
+def authenticate(username, password):
+    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
+    if user.empty:
+        return None
+    return user.iloc[0]['role']
+
 
 feat_num = []
 feat_obj = []
@@ -52,9 +59,7 @@ def customer_accounts_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
-    selected_associate = st.selectbox('Select Customer Success Associate:', filtered_data['Customer Success Associate'].unique())
 
-    associate_data = filtered_data[filtered_data['Customer Success Associate'] == selected_associate]
 
     st.dataframe(associate_data.describe())
     fig = px.bar(associate_data, x='Unique Location ID', y='Health_Score', 
@@ -82,16 +87,49 @@ def customer_accounts_view(data, selected_item):
  
 def main():
     st.title('Customer Success Dashboard')
-    selected_item = st.sidebar.selectbox("Filter by Payment Status",
+
+    # Login interface
+    st.sidebar.title("Login")
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type='password')
+    login_button = st.sidebar.button("Login")
+
+    role = None
+    if login_button:
+        role = authenticate(username, password)
+        if role is None:
+            st.sidebar.error("Invalid credentials")
+    else:
+        selected_status = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
 
-    # Aggregated performance view
-   # plot_health_score_distribution()
-   # plot_health_score_vs_revenue()
+        if role == 'associate':
+            st.subheader(f"Welcome, {username} (Associate)")
+            filtered_data = selected_status[selected_status['Customer Success Associate'] == username]
+        # Load and display associate-specific content here
+        # Replace this with your charts and tables
+        
+        elif role == 'admin':
+            st.subheader(f"Welcome, {username} (Admin)")
+            filtered_data = selected_status
+        # Load and display admin-specific content here
+        # Replace this with your charts and tables
+        
+        col1, col2 = st.columns([1, 2])
+        aggregated_performance_view(filtered_data, selected_status)
+        customer_accounts_view(filtered_data, selected_status)
+
+
+
+
+
+
 
     #st.header('Individual Health Scores')
     #plot_individual_health_scores()
     #col1, col2 = st.columns([1, 2])
+
+    
 
     #with col1:
     aggregated_performance_view(data, selected_item)
