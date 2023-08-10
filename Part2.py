@@ -1,4 +1,4 @@
-pip install pyyaml
+!pip install pyyaml
 
 import pandas as pd
 import streamlit as st
