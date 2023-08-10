@@ -85,9 +85,6 @@ def customer_accounts_view(data, selected_item):
         
 
 
-
-# ... (previous code)
-
 def main():
     st.title('Customer Success Dashboard')
 
@@ -104,17 +101,19 @@ def main():
         else:
             st.sidebar.empty()  # Clear the login interface
             st.subheader(f"Welcome, {username} ({role.capitalize()})")
+            selected_item = st.sidebar.selectbox("Filter by Payment Status", ['Overall'] + list(data['Payment Status'].unique()))
 
             if role == 'associate':
                 filtered_data = data[data['Customer Success Associate'] == username]
+                aggregated_performance_view(filtered_data,selected_item)
                 customer_accounts_view(filtered_data)
 
             elif role == 'admin':
                 associate_list = data['Customer Success Associate'].unique().tolist()
                 selected_associate = st.selectbox("Select Associate", associate_list)
                 filtered_data = data[data['Customer Success Associate'] == selected_associate]
-                aggregated_performance_view(filtered_data)
-                customer_accounts_view(filtered_data)
+                aggregated_performance_view(filtered_data,selected_item)
+                customer_accounts_view(filtered_data,selected_item)
 
             # Display additional content here
 
