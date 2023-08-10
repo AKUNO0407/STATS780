@@ -1,11 +1,10 @@
-!pip install pyyaml
-
-import pandas as pd
+import yaml
 import streamlit as st
+from yaml.loader import SafeLoader
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import yaml
-from yaml.loader import SafeLoader
+
 
 with open('../credentials.yaml') as file:
     config = yaml.load(file, Loader=SafeLoader)
