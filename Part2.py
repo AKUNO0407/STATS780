@@ -86,6 +86,7 @@ def customer_accounts_view(filtered_data, selected_item):
 
 
 def main():
+    st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard')
 
     # Login interface
@@ -106,7 +107,7 @@ def main():
             if role == 'associate':
                 filtered_data_as = data[data['Customer Success Associate'] == username]
 
-                col1, col2 = st.columns([1, 2])
+                col1, col2 = st.columns([2])
                 with col1:
                     st.subheader("Aggregated Performance")
                     aggregated_performance_view(data,selected_item)
@@ -119,7 +120,7 @@ def main():
                 selected_associate = st.selectbox("Select Associate", associate_list)
                 filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
 
-                col1, col2 = st.columns([1, 2])
+                col1, col2 = st.columns([2])
                 with col1:
                     st.subheader("Aggregated Performance")
                     aggregated_performance_view(data,selected_item)
