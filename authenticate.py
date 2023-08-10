@@ -52,7 +52,7 @@ class Authenticate:
             st.session_state['username'] = None
         if 'logout' not in st.session_state:
             st.session_state['logout'] = None
-
+'''
     def _token_encode(self) -> str:
         """
         Encodes the contents of the reauthentication cookie.
@@ -156,7 +156,7 @@ class Authenticate:
                 st.session_state['authentication_status'] = False
             else:
                 return False
-
+'''
     def login(self, form_name: str, location: str='main') -> tuple:
         """
         Creates a login widget.
@@ -237,7 +237,7 @@ class Authenticate:
             The updated plain text password.
         """
         self.credentials['usernames'][username]['password'] = Hasher([password]).generate()[0]
-        '''
+        
 
     def reset_password(self, username: str, form_name: str, location: str='main') -> bool:
         """
@@ -309,12 +309,12 @@ class Authenticate:
             raise RegisterError('Name is not valid')
         if not self.validator.validate_email(email):
             raise RegisterError('Email is not valid')
-'''
+
         self.credentials['usernames'][username] = {'name': name, 
             'password': Hasher([password]).generate()[0], 'email': email}
         if preauthorization:
             self.preauthorized['emails'].remove(email)
-'''
+
     def register_user(self, form_name: str, location: str='main', preauthorization=True) -> bool:
         """
         Creates a password reset widget.
@@ -369,7 +369,7 @@ class Authenticate:
                     raise RegisterError('Username already taken')
             else:
                 raise RegisterError('Please enter an email, username, name, and password')
-'''
+
     def _set_random_password(self, username: str) -> str:
         """
         Updates credentials dictionary with user's hashed random password.
@@ -386,7 +386,7 @@ class Authenticate:
         self.random_password = generate_random_pw()
         self.credentials['usernames'][username]['password'] = Hasher([self.random_password]).generate()[0]
         return self.random_password
-'''
+
     def forgot_password(self, form_name: str, location: str='main') -> tuple:
         """
         Creates a forgot password widget.
@@ -539,3 +539,4 @@ class Authenticate:
                     raise UpdateError('New and current values are the same')
             if len(new_value) == 0:
                 raise UpdateError('New value not provided')
+'''
