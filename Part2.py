@@ -64,7 +64,7 @@ def customer_accounts_view(filtered_data, selected_item):
 
     st.dataframe(f_data.describe())
     fig = px.bar(f_data, x='Unique Location ID', y='Health_Score', 
-                 title=f'Health Scores for {username}',
+                 title=f'Health Scores',
                  labels={'Health Score': 'Health Score (0 to 100)'})
     st.plotly_chart(fig)
     
