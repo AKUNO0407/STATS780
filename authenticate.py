@@ -8,7 +8,7 @@ import extra_streamlit_components as stx
 #from validator.py import Validator
 #from .utils import generate_random_pw
 
-from .exceptions import CredentialsError, ForgotError, RegisterError, ResetError, UpdateError
+#from .exceptions import CredentialsError, ForgotError, RegisterError, ResetError, UpdateError
 
 class Authenticate:
     """
