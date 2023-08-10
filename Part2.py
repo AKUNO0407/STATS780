@@ -6,13 +6,6 @@ import plotly.graph_objects as go
 credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
-def authenticate(username, password):
-    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
-    if user.empty:
-        return None
-    return user.iloc[0]['role']
-
-
 feat_num = []
 feat_obj = []
 
@@ -26,12 +19,20 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 
 
+def authenticate(username, password):
+    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
+    if user.empty:
+        return None
+    return user.iloc[0]['role']
+
+
+
 def aggregated_performance_view(data, selected_item):
-    filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
+    f_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
     
-    fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
+    fig_health_score_distribution = px.histogram(f_data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
     fig = go.Figure()
     fig.add_trace(fig_health_score_distribution.data[0])
@@ -41,8 +42,8 @@ def aggregated_performance_view(data, selected_item):
     # Show subplots
     st.plotly_chart(fig)
 
-    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
+    max_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].max()]['Unique Location ID']
+    min_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].min()]['Unique Location ID']
 
     overall_info = {
         'Mean Health Score': data['Health_Score'].mean(),
@@ -52,23 +53,23 @@ def aggregated_performance_view(data, selected_item):
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.write(filtered_data.describe())
+    st.write(f_data.describe())
     
 
 def customer_accounts_view(data, selected_item):
-    filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
+    f_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
 
 
-    st.dataframe(associate_data.describe())
-    fig = px.bar(associate_data, x='Unique Location ID', y='Health_Score', 
-                 title=f'Health Scores for {selected_associate}',
+    st.dataframe(f_data.describe())
+    fig = px.bar(f_data, x='Unique Location ID', y='Health_Score', 
+                 title=f'Health Scores for {username}',
                  labels={'Health Score': 'Health Score (0 to 100)'})
     st.plotly_chart(fig)
     
-    max_loc = associate_data[associate_data['Health_Score'] == associate_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = associate_data[associate_data['Health_Score'] == associate_data['Health_Score'].min()]['Unique Location ID']
+    max_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].max()]['Unique Location ID']
+    min_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].min()]['Unique Location ID']
     
     overall_info = {
         'Mean Health Score': associate_data['Health_Score'].mean(),
@@ -78,7 +79,7 @@ def customer_accounts_view(data, selected_item):
         'Client With Min Score': min_loc.values[0]
         }
     st.write(overall_info)
-    st.dataframe(associate_data[['Unique Location ID', 'Health_Score']])
+    st.dataframe(f_data[['Unique Location ID', 'Health_Score']])
     
     
         
@@ -120,22 +121,6 @@ def main():
         customer_accounts_view(filtered_data, selected_status)
 
 
-
-
-
-
-
-    #st.header('Individual Health Scores')
-    #plot_individual_health_scores()
-    #col1, col2 = st.columns([1, 2])
-
-    
-
-    #with col1:
-    aggregated_performance_view(data, selected_item)
-
-    #with col2:
-    customer_accounts_view(data, selected_item)
 
 if __name__ == '__main__':
     main()
