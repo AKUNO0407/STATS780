@@ -101,24 +101,24 @@ def main():
         if role is None:
             st.sidebar.error("Invalid credentials")
     else:
-        selected_status = st.sidebar.selectbox("Filter by Payment Status",
+        selected_item = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
 
         if role == 'associate':
             st.subheader(f"Welcome, {username} (Associate)")
-            filtered_data = selected_status[selected_status['Customer Success Associate'] == username]
+            filtered_data = selected_item[selected_item['Customer Success Associate'] == username]
         # Load and display associate-specific content here
         # Replace this with your charts and tables
         
         elif role == 'admin':
             st.subheader(f"Welcome, {username} (Admin)")
-            filtered_data = selected_status
+            filtered_data = selected_item
         # Load and display admin-specific content here
         # Replace this with your charts and tables
         
         col1, col2 = st.columns([1, 2])
-        aggregated_performance_view(filtered_data, selected_status)
-        customer_accounts_view(filtered_data, selected_status)
+        aggregated_performance_view(filtered_data, selected_item)
+        customer_accounts_view(filtered_data, selected_item)
 
 
 
