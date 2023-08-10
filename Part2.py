@@ -22,7 +22,7 @@ data[feat_num] = data[feat_num].astype(float)
 def aggregated_performance_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
 
-    st.subheader("Overall Information")
+    st.subheader("Overall Health Score Information")
     
     fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
@@ -88,8 +88,7 @@ def main():
    # plot_health_score_distribution()
    # plot_health_score_vs_revenue()
 
-    # Individual health scores for customer success associates
-    st.header('Individual Health Scores')
+    #st.header('Individual Health Scores')
     #plot_individual_health_scores()
     #col1, col2 = st.columns([1, 2])
 
