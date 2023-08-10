@@ -105,15 +105,27 @@ def main():
 
             if role == 'associate':
                 filtered_data_as = data[data['Customer Success Associate'] == username]
-                aggregated_performance_view(data,selected_item)
-                customer_accounts_view(filtered_data_as)
+
+                col1, col2 = st.columns([1, 2])
+                with col1:
+                    st.subheader("Aggregated Performance")
+                    aggregated_performance_view(data,selected_item)
+                with col2:
+                    st.subheader(f"{username}'s Performance")
+                    customer_accounts_view(filtered_data_as,selected_item)
 
             elif role == 'admin':
                 associate_list = data['Customer Success Associate'].unique().tolist()
                 selected_associate = st.selectbox("Select Associate", associate_list)
-                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]
-                aggregated_performance_view(data,selected_item)
-                customer_accounts_view(filtered_data_adm,selected_item)
+                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+
+                col1, col2 = st.columns([1, 2])
+                with col1:
+                    st.subheader("Aggregated Performance")
+                    aggregated_performance_view(data,selected_item)
+                with col2:
+                    st.subheader(f"{selected_associate}'s Performance")
+                    customer_accounts_view(filtered_data_adm,selected_item)
 
             # Display additional content here
 
