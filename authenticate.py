@@ -52,7 +52,8 @@ class Authenticate:
             st.session_state['username'] = None
         if 'logout' not in st.session_state:
             st.session_state['logout'] = None
-'''
+    
+    '''
     def _token_encode(self) -> str:
         """
         Encodes the contents of the reauthentication cookie.
@@ -156,7 +157,8 @@ class Authenticate:
                 st.session_state['authentication_status'] = False
             else:
                 return False
-'''
+    
+    '''
     def login(self, form_name: str, location: str='main') -> tuple:
         """
         Creates a login widget.
