@@ -4,7 +4,7 @@ from yaml.loader import SafeLoader
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from .authenticate import Authenticate
+from authenticate.py import Authenticate
 
 
 with open('config.yaml') as file:
