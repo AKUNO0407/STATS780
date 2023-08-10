@@ -21,6 +21,9 @@ data[feat_num] = data[feat_num].astype(float)
 
 def aggregated_performance_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
+
+    st.subheader("Overall Information")
+    
     fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
     fig = go.Figure()
@@ -31,21 +34,16 @@ def aggregated_performance_view(data, selected_item):
     # Show subplots
     st.plotly_chart(fig)
 
-    # Summary Statistics by Associate
-    #st.subheader("Overall Summary Statistics")
-    #summary_by_associate = data.groupby('Customer Success Associate')['Health Score', 'Average Order Value'].mean()
-    #st.dataframe(summary_by_associate)
+    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
+    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
 
-    # Overall Aggregate Information
-    st.subheader("Aggregate Information")
-#    overall_info = {
-#        'Mean Health Score': data['Health_Score'].mean(),
-#        'Min Health Score': data['Health_Score'].min(),
-#        'Max Health Score': data['Health_Score'].max(),
-#        'Mean Order Value': data['Average Order Value'].mean(),
-#        'Min Order Value': data['Average Order Value'].min(),
-#        'Max Order Value': data['Average Order Value'].max()
-#    }
+    overall_info = {
+        'Mean Health Score': data['Health_Score'].mean(),
+        'Min Health Score': data['Health_Score'].min(),
+        'Max Health Score': data['Health_Score'].max(),
+        'Client With Max Score': max_loc.values[0],
+        'Client With Min Score': min_loc.values[0]
+    }
     st.write(filtered_data.describe())
     
 
