@@ -4,22 +4,19 @@ import streamlit as st
 from datetime import datetime, timedelta
 import extra_streamlit_components as stx
 
-#from .hasher import Hasher
-#from validator.py import Validator
-#from .utils import generate_random_pw
+from hasher import Hasher
+from validator import Validator
+from utils import generate_random_pw
 
-#from .exceptions import CredentialsError, ForgotError, RegisterError, ResetError, UpdateError
+from .exceptions import CredentialsError, ForgotError, RegisterError, ResetError, UpdateError
 
 class Authenticate:
     """
     This class will create login, logout, register user, reset password, forgot password, 
     forgot username, and modify user details widgets.
     """
-  #  def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, 
-  #      preauthorized: list=None, validator: Validator=None):
     def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, 
-        preauthorized: list=None):
-            
+        preauthorized: list=None, validator: Validator=None):
         """
         Create a new instance of "Authenticate".
 
@@ -45,7 +42,7 @@ class Authenticate:
         self.cookie_expiry_days = cookie_expiry_days
         self.preauthorized = preauthorized
         self.cookie_manager = stx.CookieManager()
-        #self.validator = validator if validator is not None else Validator()
+        self.validator = validator if validator is not None else Validator()
 
         if 'name' not in st.session_state:
             st.session_state['name'] = None
@@ -55,8 +52,7 @@ class Authenticate:
             st.session_state['username'] = None
         if 'logout' not in st.session_state:
             st.session_state['logout'] = None
-    
-    '''
+
     def _token_encode(self) -> str:
         """
         Encodes the contents of the reauthentication cookie.
@@ -160,8 +156,7 @@ class Authenticate:
                 st.session_state['authentication_status'] = False
             else:
                 return False
-    
-    '''
+
     def login(self, form_name: str, location: str='main') -> tuple:
         """
         Creates a login widget.
@@ -185,7 +180,7 @@ class Authenticate:
         if location not in ['main', 'sidebar']:
             raise ValueError("Location must be one of 'main' or 'sidebar'")
         if not st.session_state['authentication_status']:
-            #self._check_cookie()
+            self._check_cookie()
             if not st.session_state['authentication_status']:
                 if location == 'main':
                     login_form = st.form('Login')
@@ -197,8 +192,8 @@ class Authenticate:
                 st.session_state['username'] = self.username
                 self.password = login_form.text_input('Password', type='password')
 
-                login_form.form_submit_button('Login')
-             #       self._check_credentials()
+                if login_form.form_submit_button('Login'):
+                    self._check_credentials()
 
         return st.session_state['name'], st.session_state['authentication_status'], st.session_state['username']
 
@@ -229,7 +224,7 @@ class Authenticate:
                 st.session_state['name'] = None
                 st.session_state['username'] = None
                 st.session_state['authentication_status'] = None
-'''
+
     def _update_password(self, username: str, password: str):
         """
         Updates credentials dictionary with user's reset hashed password.
@@ -242,7 +237,6 @@ class Authenticate:
             The updated plain text password.
         """
         self.credentials['usernames'][username]['password'] = Hasher([password]).generate()[0]
-        
 
     def reset_password(self, username: str, form_name: str, location: str='main') -> bool:
         """
@@ -544,4 +538,3 @@ class Authenticate:
                     raise UpdateError('New and current values are the same')
             if len(new_value) == 0:
                 raise UpdateError('New value not provided')
-'''
