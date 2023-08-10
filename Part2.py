@@ -104,16 +104,16 @@ def main():
             selected_item = st.sidebar.selectbox("Filter by Payment Status", ['Overall'] + list(data['Payment Status'].unique()))
 
             if role == 'associate':
-                filtered_data = data[data['Customer Success Associate'] == username]
-                aggregated_performance_view(filtered_data,selected_item)
-                customer_accounts_view(filtered_data)
+                filtered_data_as = data[data['Customer Success Associate'] == username]
+                aggregated_performance_view(data,selected_item)
+                customer_accounts_view(filtered_data_as)
 
             elif role == 'admin':
                 associate_list = data['Customer Success Associate'].unique().tolist()
                 selected_associate = st.selectbox("Select Associate", associate_list)
-                filtered_data = data[data['Customer Success Associate'] == selected_associate]
-                aggregated_performance_view(filtered_data,selected_item)
-                customer_accounts_view(filtered_data,selected_item)
+                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]
+                aggregated_performance_view(data,selected_item)
+                customer_accounts_view(filtered_data_adm,selected_item)
 
             # Display additional content here
 
