@@ -51,17 +51,13 @@ def aggregated_performance_view(data, selected_item):
 
 def customer_accounts_view(data, selected_item):
     filtered_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
-    selected_associate = st.selectbox('Select Customer Success Associate:', filtered_data['Customer Success Associate'].unique())
 
     st.subheader("Associate Aggregate Information")
-    
+    selected_associate = st.selectbox('Select Customer Success Associate:', filtered_data['Customer Success Associate'].unique())
+
     associate_data = filtered_data[filtered_data['Customer Success Associate'] == selected_associate]
-    st.dataframe(associate_data[['Unique Location ID', 'Health_Score']])
 
-
-    #st.dataframe(associate_data.groupby('Customer Success Associate')[feat_num].sum())
     st.dataframe(associate_data.describe())
-    
     fig = px.bar(associate_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores for {selected_associate}',
                  labels={'Health Score': 'Health Score (0 to 100)'})
@@ -77,6 +73,8 @@ def customer_accounts_view(data, selected_item):
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
         }
+
+    st.dataframe(associate_data[['Unique Location ID', 'Health_Score']])
     
     st.write(overall_info)
         
