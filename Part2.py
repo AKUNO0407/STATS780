@@ -27,8 +27,8 @@ def authenticate(username, password):
 
 
 
-def aggregated_performance_view(data, selected_item):
-    f_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
+def aggregated_performance_view(filtered_data, selected_item):
+    f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
     
@@ -56,8 +56,8 @@ def aggregated_performance_view(data, selected_item):
     st.write(f_data.describe())
     
 
-def customer_accounts_view(data, selected_item):
-    f_data = data if selected_item == 'Overall' else data[data['Payment Status'] == selected_item]
+def customer_accounts_view(filtered_data, selected_item):
+    f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
 
