@@ -85,7 +85,7 @@ def customer_accounts_view(data, selected_item):
         
 
     
- 
+
 def main():
     st.title('Customer Success Dashboard')
 
@@ -106,21 +106,20 @@ def main():
 
         if role == 'associate':
             st.subheader(f"Welcome, {username} (Associate)")
-            filtered_data = selected_item[selected_item['Customer Success Associate'] == username]
-        # Load and display associate-specific content here
-        # Replace this with your charts and tables
-        
+            filtered_data = data[data['Customer Success Associate'] == username]
+            aggregated_performance_view(data)
+            customer_accounts_view(filtered_data)
+
         elif role == 'admin':
             st.subheader(f"Welcome, {username} (Admin)")
-            filtered_data = selected_item
-        # Load and display admin-specific content here
-        # Replace this with your charts and tables
-        
-        col1, col2 = st.columns([1, 2])
-        aggregated_performance_view(filtered_data, selected_item)
-        customer_accounts_view(filtered_data, selected_item)
+            associate_list = data['Customer Success Associate'].unique().tolist()
+            selected_associate = st.sidebar.selectbox("Select Associate", associate_list)
+            
+            filtered_data = data[data['Customer Success Associate'] == selected_associate]
+            aggregated_performance_view(data)
+            customer_accounts_view(filtered_data)
 
-
+        # Display additional content here
 
 if __name__ == '__main__':
     main()
