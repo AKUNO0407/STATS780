@@ -104,22 +104,22 @@ def customer_accounts_view(filtered_data, selected_item):
 
 
 def main():
-    st.set_page_config(layout="wide")
-    st.title('Customer Success Dashboard')
+
 
     # Login interface
-    st.sidebar.title("Login")
-    username = st.sidebar.text_input("Username")
-    password = st.sidebar.text_input("Password", type='password')
-    login_button = st.sidebar.button("Login")
+    #st.sidebar.title("Login")
+    #username = st.sidebar.text_input("Username")
+    #password = st.sidebar.text_input("Password", type='password')
+    #login_button = st.sidebar.button("Login")
 
-    
     if authentication_status == False:
         st.error('Username/password is incorrect')
     elif authentication_status == None:
         st.warning('Please enter your username and password')
     elif authentication_status:
         authenticator.logout('Logout', 'main')
+        st.set_page_config(layout="wide")
+        st.title('Customer Success Dashboard')
         st.write(f'Welcome *{name}*')
         #st.title('Some content')
 
@@ -133,29 +133,28 @@ def main():
     #        selected_item = st.sidebar.selectbox("Filter by Payment Status", ['Overall'] + list(data['Payment Status'].unique()))
 
 
-            if username == 'admin':
-                associate_list = data['Customer Success Associate'].unique().tolist()
-                selected_associate = st.selectbox("Select Associate", associate_list)
-                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+        if username == 'admin':
+            associate_list = data['Customer Success Associate'].unique().tolist()
+            selected_associate = st.selectbox("Select Associate", associate_list)
+            filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
 
-                col1, col2 = st.columns([2])
-                with col1:
-                    st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data,selected_item)
-                with col2:
-                    st.subheader(f"{selected_associate}'s Performance")
-                    customer_accounts_view(filtered_data_adm,selected_item)
+            col1, col2 = st.columns([2])
+            with col1:
+                st.subheader("Aggregated Performance")
+                aggregated_performance_view(data,selected_item)
+            with col2:
+                st.subheader(f"{selected_associate}'s Performance")
+                customer_accounts_view(filtered_data_adm,selected_item)
 
-            else:
-                filtered_data_as = data[data['Customer Success Associate'] == username]
-
-                col1, col2 = st.columns([2])
-                with col1:
-                    st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data,selected_item)
-                with col2:
-                    st.subheader(f"{username}'s Performance")
-                    customer_accounts_view(filtered_data_as,selected_item)
+        else:
+            filtered_data_as = data[data['Customer Success Associate'] == username]
+            col1, col2 = st.columns([2])
+            with col1:
+                st.subheader("Aggregated Performance")
+                aggregated_performance_view(data,selected_item)
+            with col2:
+                st.subheader(f"{username}'s Performance")
+                customer_accounts_view(filtered_data_as,selected_item)
 
             # Display additional content here
 
