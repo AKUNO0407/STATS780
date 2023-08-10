@@ -72,9 +72,9 @@ def customer_accounts_view(filtered_data, selected_item):
     min_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].min()]['Unique Location ID']
     
     overall_info = {
-        'Mean Health Score': associate_data['Health_Score'].mean(),
-        'Min Health Score': associate_data['Health_Score'].min(),
-        'Max Health Score': associate_data['Health_Score'].max(),
+        'Mean Health Score': f_data['Health_Score'].mean(),
+        'Min Health Score': f_data['Health_Score'].min(),
+        'Max Health Score': f_data['Health_Score'].max(),
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
         }
