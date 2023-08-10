@@ -185,7 +185,7 @@ class Authenticate:
         if location not in ['main', 'sidebar']:
             raise ValueError("Location must be one of 'main' or 'sidebar'")
         if not st.session_state['authentication_status']:
-            self._check_cookie()
+           # self._check_cookie()
             if not st.session_state['authentication_status']:
                 if location == 'main':
                     login_form = st.form('Login')
