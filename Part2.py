@@ -44,6 +44,8 @@ def aggregated_performance_view(data, selected_item):
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
     }
+    st.write(overall_info)
+    
     st.write(filtered_data.describe())
     
 
