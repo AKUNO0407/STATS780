@@ -84,7 +84,9 @@ def customer_accounts_view(data, selected_item):
     
         
 
-    
+
+
+# ... (previous code)
 
 def main():
     st.title('Customer Success Dashboard')
@@ -95,33 +97,26 @@ def main():
     password = st.sidebar.text_input("Password", type='password')
     login_button = st.sidebar.button("Login")
 
-    role = None
     if login_button:
         role = authenticate(username, password)
         if role is None:
             st.sidebar.error("Invalid credentials")
-    else:
-        selected_item = st.sidebar.selectbox("Filter by Payment Status",
-                                            ['Overall'] + list(data['Payment Status'].unique()))
+        else:
+            st.sidebar.empty()  # Clear the login interface
+            st.subheader(f"Welcome, {username} ({role.capitalize()})")
 
-        if role == 'associate':
-            st.subheader(f"Welcome, {username} (Associate)")
-            filtered_data = data[data['Customer Success Associate'] == username]
-            aggregated_performance_view(data)
-            customer_accounts_view(filtered_data)
+            if role == 'associate':
+                filtered_data = data[data['Customer Success Associate'] == username]
+                customer_accounts_view(filtered_data)
 
-        elif role == 'admin':
-            st.subheader(f"Welcome, {username} (Admin)")
-            associate_list = data['Customer Success Associate'].unique().tolist()
-            selected_associate = st.sidebar.selectbox("Select Associate", associate_list)
-            
-            filtered_data = data[data['Customer Success Associate'] == selected_associate]
-            aggregated_performance_view(data)
-            customer_accounts_view(filtered_data)
+            elif role == 'admin':
+                associate_list = data['Customer Success Associate'].unique().tolist()
+                selected_associate = st.selectbox("Select Associate", associate_list)
+                filtered_data = data[data['Customer Success Associate'] == selected_associate]
+                aggregated_performance_view(filtered_data)
+                customer_accounts_view(filtered_data)
 
-        # Display additional content here
+            # Display additional content here
 
 if __name__ == '__main__':
     main()
-
-   
