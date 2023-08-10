@@ -15,8 +15,11 @@ class Authenticate:
     This class will create login, logout, register user, reset password, forgot password, 
     forgot username, and modify user details widgets.
     """
+  #  def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, 
+  #      preauthorized: list=None, validator: Validator=None):
     def __init__(self, credentials: dict, cookie_name: str, key: str, cookie_expiry_days: float=30.0, 
-        preauthorized: list=None, validator: Validator=None):
+        preauthorized: list=None):
+            
         """
         Create a new instance of "Authenticate".
 
@@ -42,7 +45,7 @@ class Authenticate:
         self.cookie_expiry_days = cookie_expiry_days
         self.preauthorized = preauthorized
         self.cookie_manager = stx.CookieManager()
-        self.validator = validator if validator is not None else Validator()
+        #self.validator = validator if validator is not None else Validator()
 
         if 'name' not in st.session_state:
             st.session_state['name'] = None
