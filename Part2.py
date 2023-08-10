@@ -2,8 +2,26 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+import yaml
+from yaml.loader import SafeLoader
 
-credentials = pd.read_csv('user_credentials.csv')
+with open('../credentials.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+#credentials = pd.read_csv('user_credentials.csv')
+
+authenticator = Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['preauthorized']
+)
+
+name, authentication_status, username = authenticator.login('Login', 'main')
+
+
+
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
 feat_num = []
@@ -19,11 +37,11 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 
 
-def authenticate(username, password):
-    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
-    if user.empty:
-        return None
-    return user.iloc[0]['role']
+#def authenticate(username, password):
+#    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
+#    if user.empty:
+#        return None
+#    return user.iloc[0]['role']
 
 
 
@@ -95,27 +113,27 @@ def main():
     password = st.sidebar.text_input("Password", type='password')
     login_button = st.sidebar.button("Login")
 
-    if login_button:
-        role = authenticate(username, password)
-        if role is None:
-            st.sidebar.error("Invalid credentials")
-        else:
-            st.sidebar.empty()  # Clear the login interface
-            st.subheader(f"Welcome, {username} ({role.capitalize()})")
-            selected_item = st.sidebar.selectbox("Filter by Payment Status", ['Overall'] + list(data['Payment Status'].unique()))
+    
+    if authentication_status == False:
+        st.error('Username/password is incorrect')
+    elif authentication_status == None:
+        st.warning('Please enter your username and password')
+    elif authentication_status:
+        authenticator.logout('Logout', 'main')
+        st.write(f'Welcome *{name}*')
+        #st.title('Some content')
 
-            if role == 'associate':
-                filtered_data_as = data[data['Customer Success Associate'] == username]
+    #if login_button:
+    #    role = authenticate(username, password)
+    #    if role is None:
+    #        st.sidebar.error("Invalid credentials")
+    #    else:
+    #        st.sidebar.empty()  # Clear the login interface
+    #        st.subheader(f"Welcome, {username} ({role.capitalize()})")
+    #        selected_item = st.sidebar.selectbox("Filter by Payment Status", ['Overall'] + list(data['Payment Status'].unique()))
 
-                col1, col2 = st.columns([2])
-                with col1:
-                    st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data,selected_item)
-                with col2:
-                    st.subheader(f"{username}'s Performance")
-                    customer_accounts_view(filtered_data_as,selected_item)
 
-            elif role == 'admin':
+            if username == 'admin':
                 associate_list = data['Customer Success Associate'].unique().tolist()
                 selected_associate = st.selectbox("Select Associate", associate_list)
                 filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
@@ -127,6 +145,17 @@ def main():
                 with col2:
                     st.subheader(f"{selected_associate}'s Performance")
                     customer_accounts_view(filtered_data_adm,selected_item)
+
+            else:
+                filtered_data_as = data[data['Customer Success Associate'] == username]
+
+                col1, col2 = st.columns([2])
+                with col1:
+                    st.subheader("Aggregated Performance")
+                    aggregated_performance_view(data,selected_item)
+                with col2:
+                    st.subheader(f"{username}'s Performance")
+                    customer_accounts_view(filtered_data_as,selected_item)
 
             # Display additional content here
 
