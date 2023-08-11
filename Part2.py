@@ -22,6 +22,8 @@ for iclm in data.columns.to_list():
         feat_obj.append(iclm)
         
 data[feat_num] = data[feat_num].astype(float)  
+num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_orders',
+          'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
 
 
 class SessionState:
@@ -86,6 +88,7 @@ def aggregated_performance_view(data):
     }
     st.write(overall_info)
     #st.dataframe(data.describe())
+    
     st.dataframe(data.groupby(['Parent Restaurant name'])[num_lis].sum())
 
 
