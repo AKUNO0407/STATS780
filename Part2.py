@@ -128,14 +128,14 @@ def main():
             password = st.sidebar.text_input("Password", type='password')
             login_button = st.sidebar.button("Login")
             
-        if login_button:
-            role = authenticate(username, password)
-            if role is None:
-                st.sidebar.error("Invalid credentials")
-            else:
-                state.logged_in = True
-                state.username = username
-                state.role = role
+            if login_button:
+                role = authenticate(username, password)
+                if role is None:
+                    st.sidebar.error("Invalid credentials")
+                else:
+                    state.logged_in = True
+                    state.username = username
+                    state.role = role
     else:
         selected_item = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
