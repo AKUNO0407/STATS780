@@ -52,7 +52,7 @@ def aggregated_performance_view(data):
         #fig = go.Figure()
         #fig.add_trace(fig_health_score_distribution.data[0])
         #fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
-        hist_data = data['Health_Score']
+        hist_data = [data['Health_Score']]
         group_labels = ['Health_Score'] 
         
         fig = ff.create_distplot(hist_data,group_labels)
