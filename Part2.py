@@ -195,7 +195,7 @@ def main():
             if username == 'admin':
                 st.subheader(f"Welcome, {username}")
                 #associate_list = data['Customer Success Associate'].unique().tolist()
-                #selected_associate = st.selectbox("Select Associate", associate_list, key="admin_select_associate")
+                #selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
                 #filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
                 filtered_data_adm = data
 
