@@ -120,28 +120,26 @@ def main():
 
     if not state.logged_in:
         st.title('Customer Success Dashboard')
-        if state.logged_in:
-            st.sidebar.empty()
-        else:
-            st.sidebar.title("Login")
-            username = st.sidebar.text_input("Username")
-            password = st.sidebar.text_input("Password", type='password')
-            login_button = st.sidebar.button("Login")
-            
-            if login_button:
-                role = authenticate(username, password)
-                if role is None:
-                    st.sidebar.error("Invalid credentials")
-                else:
-                    state.logged_in = True
-                    state.username = username
-                    state.role = role
-    else:
+        st.sidebar.title("Login")
+        username = st.sidebar.text_input("Username")
+        password = st.sidebar.text_input("Password", type='password')
+        login_button = st.sidebar.button("Login")
+
+        if login_button:
+            role = authenticate(username, password)
+            if role is None:
+                st.sidebar.error("Invalid credentials")
+            else:
+                state.logged_in = True
+                state.username = username
+                state.role = role
+    if state.logged_in:
+        st.title(f'Customer Success Dashboard - Welcome, {state.username} ({state.role.capitalize()})')
         selected_item = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
 
         if username == 'admin':
-            st.subheader(f"Welcome, {username}")
+           # st.subheader(f"Welcome, {username}")
             associate_list = data['Customer Success Associate'].unique().tolist()
             selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
             filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
@@ -155,7 +153,7 @@ def main():
             customer_accounts_view(filtered_data_adm)
 
         else:
-            st.subheader(f"Welcome, {username} (Associate)")
+          #  st.subheader(f"Welcome, {username} (Associate)")
             filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
             col1, col2 = st.columns([1,1])
 
