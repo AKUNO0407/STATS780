@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-
+from streamlit_login_auth_ui.widgets import __login__
 credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
@@ -34,7 +34,7 @@ import streamlit as st
 
 
 
-def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+def filter_dataframe(df: pd.DataFrame, key_suffix: str = "") -> pd.DataFrame:
     """
     Adds a UI on top of a dataframe to let viewers filter columns
 
@@ -44,7 +44,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Filtered dataframe
     """
-    modify = st.checkbox("Add filters")
+    modify = st.checkbox("Add filters", key=f"modify_checkbox_{key_suffix}")
 
     if not modify:
         return df 
@@ -66,7 +66,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     with modification_container:
         to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
-        for column in to_filter_columns:
+        for idx, column in enumerate(to_filter_columns):
             left, right = st.columns((1, 20))
             left.write("↳")
             unique_key = f"{column}_{idx}"
@@ -147,14 +147,14 @@ def aggregated_performance_view(filtered_data, selected_item):
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(filtered_data).describe())
+    st.dataframe(filter_dataframe(filtered_data, "agg_data").describe())
 
 def customer_accounts_view(filtered_data, selected_item):
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
 
-    st.dataframe(filter_dataframe(filtered_data))
+    st.dataframe(filter_dataframe(filtered_data, "Associate_Data"))
     
     fig = px.bar(f_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores',
@@ -172,7 +172,7 @@ def customer_accounts_view(filtered_data, selected_item):
         'Client With Min Score': min_loc.values[0]
         }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(filtered_data[['Unique Location ID', 'Health_Score']]))
+    st.dataframe(filter_dataframe(filtered_data[['Unique Location ID', 'Health_Score']], "Associate_scores"))
     
     
         
