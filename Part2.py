@@ -194,9 +194,10 @@ def main():
 
             if username == 'admin':
                 st.subheader(f"Welcome, {username}")
-                associate_list = data['Customer Success Associate'].unique().tolist()
-                selected_associate = st.selectbox("Select Associate", associate_list, key="admin_select_associate")
-                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+                #associate_list = data['Customer Success Associate'].unique().tolist()
+                #selected_associate = st.selectbox("Select Associate", associate_list, key="admin_select_associate")
+                #filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+                filtered_data_adm = data
 
                 col1, col2 = st.columns([1,1])
                 with col1:
@@ -205,7 +206,6 @@ def main():
                 with col2:
                     st.subheader(f"{selected_associate}'s Performance")
                     customer_accounts_view(filtered_data_adm,selected_item)
-
 
             else:
                 st.subheader(f"Welcome, {username} (Associate)")
