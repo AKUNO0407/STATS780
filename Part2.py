@@ -204,7 +204,7 @@ def main():
                     st.subheader("Aggregated Performance")
                     aggregated_performance_view(data,selected_item)
                 with col2:
-                    st.subheader(f"{selected_associate}'s Performance")
+                    st.subheader("Associate's Performance")
                     customer_accounts_view(filtered_data_adm,selected_item)
 
             else:
