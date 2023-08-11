@@ -88,8 +88,12 @@ def aggregated_performance_view(data):
     }
     st.write(overall_info)
     #st.dataframe(data.describe())
+
+    df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
+    df_gp['Avg Health Score'] = df_score.groupby(['Parent Restaurant name'])['Health_Score'].mean()
+    df_gp['Number of location'] = df_score.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
     
-    st.dataframe(data.groupby(['Parent Restaurant name'])[num_lis].sum())
+    st.dataframe(round(df_gp,2))
 
 
 
