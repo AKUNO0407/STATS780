@@ -33,84 +33,6 @@ import pandas as pd
 import streamlit as st
 
 
-
-def filter_dataframe(df: pd.DataFrame, key_suffix: str = "") -> pd.DataFrame:
-    """
-    Adds a UI on top of a dataframe to let viewers filter columns
-
-    Args:
-        df (pd.DataFrame): Original dataframe
-
-    Returns:
-        pd.DataFrame: Filtered dataframe
-    """
-    modify = st.checkbox("Add filters", key=f"modify_checkbox_{key_suffix}")
-
-    if not modify:
-        return df 
-
-    df = df.copy()
-
-# Try to convert datetimes into a standard format (datetime, no timezone)
-    for col in df.columns:
-        if is_object_dtype(df[col]):
-        	try:
-        	    df[col] = pd.to_datetime(df[col])
-        	except Exception:
-        	    pass
-    
-        if is_datetime64_any_dtype(df[col]):
-            df[col] = df[col].dt.tz_localize(None)
-
-    modification_container = st.container()
-
-    with modification_container:
-        to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
-        for idx, column in enumerate(to_filter_columns):
-            left, right = st.columns((1, 20))
-            left.write("↳")
-            unique_key = f"{column}_{idx}"
-            # Treat columns with < 10 unique values as categorical
-            
-            if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
-                user_cat_input = right.multiselect(
-                    f"Values for {column}",
-                    df[column].unique(),
-                    default=list(df[column].unique()),
-                )
-                df = df[df[column].isin(user_cat_input)]
-            elif is_numeric_dtype(df[column]):
-                _min = float(df[column].min())
-                _max = float(df[column].max())
-                step = (_max - _min) / 100
-                user_num_input = right.slider(
-                    f"Values for {column}",
-                    min_value=_min,
-                    max_value=_max,
-                    value=(_min, _max),
-                    step=step,
-                )
-                df = df[df[column].between(*user_num_input)]
-            elif is_datetime64_any_dtype(df[column]):
-                user_date_input = right.date_input(
-                    f"Values for {column}",
-                    value=(
-                        df[column].min(),
-                        df[column].max(),
-                    ),
-                )
-                if len(user_date_input) == 2:
-                    user_date_input = tuple(map(pd.to_datetime, user_date_input))
-                    start_date, end_date = user_date_input
-                    df = df.loc[df[column].between(start_date, end_date)]
-            else:
-                user_text_input = right.text_input(
-                    f"Substring or regex in {column}",
-                )
-                if user_text_input:
-                    df = df[df[column].astype(str).str.contains(user_text_input)]
-
-    return df
     
 
 def authenticate(username, password):
@@ -125,16 +47,24 @@ def aggregated_performance_view(data):
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
-    
-    fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
-    fig = go.Figure()
-    fig.add_trace(fig_health_score_distribution.data[0])
+    c1, c2 = st.columns(0.7, 0.3)
     
-    fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
-
-    # Show subplots
-    st.plotly_chart(fig)
+    with c1:
+        fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
+        fig = go.Figure()
+        fig.add_trace(fig_health_score_distribution.data[0])
+        
+        fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
+        st.plotly_chart(fig)
+    with c2:
+        fig2 =go.Figure(go.Sunburst(
+        labels=["Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
+        parents=["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve" ],
+        values=[10, 14, 12, 10, 2, 6, 6, 4, 4],
+        ))
+        fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+        st.plotly_chart(fig2, use_container_width=True)
 
     max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
     min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
@@ -199,29 +129,28 @@ def main():
 
             if username == 'admin':
                 st.subheader(f"Welcome, {username}")
-                #associate_list = data['Customer Success Associate'].unique().tolist()
-                #selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
-                #filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
-                filtered_data_adm = data
+                associate_list = data['Customer Success Associate'].unique().tolist()
+                selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
+                filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
                 col1, col2 = st.columns([1,1])
-                with col1:
-                    st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data)
-                with col2:
-                    st.subheader("Associate's Performance")
-                    customer_accounts_view(filtered_data_adm)
+                #with col1:
+                st.subheader("Aggregated Performance")
+                aggregated_performance_view(data)
+               # with col2:
+                st.subheader("Associate's Performance")
+                customer_accounts_view(filtered_data_adm)
 
             else:
                 st.subheader(f"Welcome, {username} (Associate)")
                 filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
                 col1, col2 = st.columns([1,1])
-                with col1:
-                    st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data)
-                with col2:
-                    st.subheader(f"{username}'s Performance")
-                    customer_accounts_view(filtered_data_as)
+
+                st.subheader("Aggregated Performance")
+                aggregated_performance_view(data)
+               # with col2:
+                st.subheader(f"{username}'s Performance")
+                customer_accounts_view(filtered_data_as)
 
 
     
