@@ -60,28 +60,19 @@ def aggregated_performance_view(data):
         st.plotly_chart(fig)
     with c2:
         fig2 =go.Figure(go.Sunburst(
-            labels= ["",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
-                 'Order Value Score', 'Loyalty Score', 'Retention Score', 'Delivery Partner Score', 'Highest Product Score'],
-            parents=["", "","","","", 'Payment Status Score','Order Value Score', 'Loyalty Score', 'Retention Score',
-                 'Delivery Partner Score', 'Highest Product Score'],
-            values=[0,-10, -5, -5, -10, 25, 25, 20, 20, 10, 20],
-            color_discrete_map= {
-        'Order Discrepancy': '#Eda3a3',
-        'Cancellation Rate': '#f3d0d0',
-        'Missed Orders Rate': '#ddadad',
-        'Churn Score': '#E3b3a0',
-        'Payment Status Score': '#95c1da',
-        'Order Value Score': '#B0d3e3',
-        'Loyalty Score' : '#B6dad7',
-        'Retention Score': '#c7e2e5',
-#        'Feature Adoption': '#d3eaf2',
-        'Delivery Partner Score': '#bee0ec',
-        'Highest Product Score': '#C7e5e1'
-            } )
-        )
+            labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
+                          'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
+            parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
+                     'Weights','Weights', 'Weights', 'Weights',
+                         'Weights', 'Weights'],
+            values=[130,10, 5, 5, 10, 25, 20, 20, 25, 10, 20],
+            marker=dict(colors= ["", '#Eda3a3', '#f3d0d0','#ddadad','#E3b3a0','#95c1da','#B0d3e3','#B6dad7','#c7e2e5','#bee0ec','#C7e5e1']),
+            branchvalues="total"
+        ))
         fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
-        #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
-        #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+                #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
+                #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+
         st.plotly_chart(fig2, use_container_width=True)
 
     max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
