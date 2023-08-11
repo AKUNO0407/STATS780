@@ -10,3 +10,7 @@ PyJWT >=2.3.0
 bcrypt >= 3.1.7
 streamlit >= 0.86
 extra-streamlit-components >= 0.1.55
+streamlit-login-auth-ui == 0.2.0
+streamlit-lottie==0.0.5
+streamlit-option-menu==0.3.6
+trycourier==5.0.0
