@@ -144,7 +144,7 @@ def aggregated_performance_view(filtered_data, selected_item):
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(f_data).describe())
+    st.dataframe(filter_dataframe(filtered_data).describe())
 
 def customer_accounts_view(filtered_data, selected_item):
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
