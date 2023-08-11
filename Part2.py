@@ -90,8 +90,8 @@ def aggregated_performance_view(data):
     #st.dataframe(data.describe())
 
     df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
-    df_gp['Avg Health Score'] = df_score.groupby(['Parent Restaurant name'])['Health_Score'].mean()
-    df_gp['Number of location'] = df_score.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
+    df_gp['Avg Health Score'] = df_gp.groupby(['Parent Restaurant name'])['Health_Score'].mean()
+    df_gp['Number of location'] = df_gp.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
     
     st.dataframe(round(df_gp,2))
 
@@ -102,13 +102,18 @@ def customer_accounts_view(filtered_data):
 
    # st.subheader("Associate Aggregate Information")
 
-    st.dataframe(filtered_data.describe())
+    col1, col2 = st.columns([3, 1])
     
-    fig = px.bar(filtered_data, x='Unique Location ID', y='Health_Score', 
-                 title=f'Health Scores',
-                 labels={'Health Score': 'Health Score (0 to 100)'})
-    st.plotly_chart(fig)
+    col1.subheader("Health Scores Chart")
+    col1.line_chart(Health_Score)
     
+    col2.subheader("A narrow column with the data")
+    col2.write(filtered_data[['Unique Location ID', 'Health_Score']])
+
+
+    c1, c2 = st.columns([1, 4])
+
+        
     max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
     min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
     
@@ -119,8 +124,20 @@ def customer_accounts_view(filtered_data):
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
         }
-    st.write(overall_info)
-    st.dataframe(filtered_data[['Unique Location ID', 'Health_Score']])
+    c1.write(overall_info)   
+    c2.subheader("A narrow column with the data")
+    df_gp = filtered_data.groupby(['Parent Restaurant name'])[num_lis].sum()
+    df_gp['Avg Health Score'] = filtered_data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
+    df_gp['Number of location'] = filtered_data.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
+    
+    c2.dataframe(round(df_gp,2))
+    
+    #fig = px.bar(filtered_data, x='Unique Location ID', y='Health_Score', 
+    #             title=f'Health Scores',
+    #             labels={'Health Score': 'Health Score (0 to 100)'})
+    #st.plotly_chart(fig)
+
+    
     
     
         
