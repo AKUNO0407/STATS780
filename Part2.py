@@ -88,6 +88,7 @@ def customer_accounts_view(filtered_data, selected_item):
 
 def main():
 
+    st.set_page_config(layout="wide")
     # Login interface
     st.sidebar.title("Login")
     username = st.sidebar.text_input("Username")
@@ -108,7 +109,7 @@ def main():
             selected_associate = st.selectbox("Select Associate", associate_list)
             filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
 
-            col1, col2 = st.columns([2])
+            col1, col2 = st.columns([1,1])
             with col1:
                 st.subheader("Aggregated Performance")
                 aggregated_performance_view(data,selected_item)
@@ -119,7 +120,7 @@ def main():
         else:
             st.subheader(f"Welcome, {username} (Associate)")
             filtered_data_as = data[data['Customer Success Associate'] == username]
-            col1, col2 = st.columns([2])
+            col1, col2 = st.columns([1,1])
             with col1:
                 st.subheader("Aggregated Performance")
                 aggregated_performance_view(data,selected_item)
