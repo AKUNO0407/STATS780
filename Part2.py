@@ -110,9 +110,9 @@ def main():
     #password = st.sidebar.text_input("Password", type='password')
     #login_button = st.sidebar.button("Login")
 
-    _RELEASE = True
+    #_RELEASE = True
 
-if not _RELEASE:
+#if not _RELEASE:
     # hashed_passwords = Hasher(['abc', 'def']).generate()
 
     # Loading config file
