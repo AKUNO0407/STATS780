@@ -1,3 +1,4 @@
+scipy
 pandas==1.2.3
 streamlit==1.12.2
 plotly==5.3.1
@@ -15,4 +16,4 @@ streamlit-lottie==0.0.5
 streamlit-option-menu==0.3.6
 trycourier==5.0.0
 features_factory>=2.0.0
-scipy
+
