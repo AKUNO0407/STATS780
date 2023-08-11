@@ -80,8 +80,8 @@ def aggregated_performance_view(data):
             } )
         )
         fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
-        fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
-                  marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+        #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
+        #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
         st.plotly_chart(fig2, use_container_width=True)
 
     max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
