@@ -126,7 +126,7 @@ def aggregated_performance_view(data):
 
     st.subheader("Overall Health Score Information")
     
-    fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
+    fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
     fig = go.Figure()
     fig.add_trace(fig_health_score_distribution.data[0])
