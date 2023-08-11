@@ -68,6 +68,12 @@ def aggregated_performance_view(data):
 
         st.plotly_chart(fig2, use_container_width=True)
 
+    fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
+                     size="Total_Order_Value_norm", 
+                     hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
+    st.plotly_chart(fig_scat, use_container_width=True)
+    
+        
     max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
     min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
 
@@ -79,7 +85,8 @@ def aggregated_performance_view(data):
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.dataframe(data.describe())
+    #st.dataframe(data.describe())
+    st.dataframe(data.groupby(['Parent Restaurant name'])[num_lis].sum())
 
 
 
@@ -149,7 +156,7 @@ def main():
             aggregated_performance_view(data)
                # with col2:
             st.subheader("Associate's Performance")
-            customer_accounts_view(data)
+            #customer_accounts_view(data)
 
         else:
           #  st.subheader(f"Welcome, {username} (Associate)")
