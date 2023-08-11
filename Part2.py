@@ -174,16 +174,16 @@ def main():
            # selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
            # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
-            col1, col2 = st.columns([1,1])
-            with col1:
+            #col1, col2 = st.columns([1,1])
+            #with col1:
                 #st.subheader("Aggregated Performance")
-                aggregated_performance_view(data)
-            with col2:
+            aggregated_performance_view(data)
+            #with col2:
                 #customer_accounts_view(data)
-                    df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
-                    df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
-                    df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
-                    st.dataframe(round(df_gp, 2))
+            df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
+            df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
+            df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
+            st.dataframe(round(df_gp, 2))
             
 
         else:
