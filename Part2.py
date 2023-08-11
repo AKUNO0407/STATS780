@@ -187,7 +187,7 @@ def main():
             st.error(e)
 
     # Saving config file
-    with open('../config.yaml', 'w') as file:
+    with open('config.yaml', 'w') as file:
         yaml.dump(config, file, default_flow_style=False)
 
         if username == 'admin':
