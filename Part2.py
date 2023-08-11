@@ -47,18 +47,18 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     modify = st.checkbox("Add filters")
 
     if not modify:
-        return df
+        return df 
 
     df = df.copy()
 
-    # Try to convert datetimes into a standard format (datetime, no timezone)
+# Try to convert datetimes into a standard format (datetime, no timezone)
     for col in df.columns:
         if is_object_dtype(df[col]):
-            try:
-                df[col] = pd.to_datetime(df[col])
-            except Exception:
-                pass
-
+        	try:
+        	    df[col] = pd.to_datetime(df[col])
+        	except Exception:
+        	    pass
+    
         if is_datetime64_any_dtype(df[col]):
             df[col] = df[col].dt.tz_localize(None)
 
@@ -66,10 +66,12 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     with modification_container:
         to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
-        for idx, column in enumerate(to_filter_columns):
+        for column in to_filter_columns:
             left, right = st.columns((1, 20))
+            left.write("↳")
             unique_key = f"{column}_{idx}"
             # Treat columns with < 10 unique values as categorical
+            
             if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
                 user_cat_input = right.multiselect(
                     f"Values for {column}",
