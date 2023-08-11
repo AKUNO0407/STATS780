@@ -53,9 +53,9 @@ def aggregated_performance_view(data):
         #fig.add_trace(fig_health_score_distribution.data[0])
         #fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
         hist_data = data['Health_Score']
-        #group_labels = ['distplot'] 
+        group_labels = ['Health_Score'] 
         
-        fig = ff.create_distplot(hist_data)
+        fig = ff.create_distplot(hist_data,group_labels)
         st.plotly_chart(fig)
     with ca2:
         fig2 =go.Figure(go.Sunburst(
