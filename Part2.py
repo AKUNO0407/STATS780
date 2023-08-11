@@ -44,16 +44,16 @@ def aggregated_performance_view(data):
 
     st.subheader("Overall Health Score Information")
 
-    c1, c2 = st.columns([0.7, 0.3])
+    ca1, ca2 = st.columns([7, 3])
     
-    with c1:
+    with ca1:
         fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
         fig = go.Figure()
         fig.add_trace(fig_health_score_distribution.data[0])
         
         fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
         st.plotly_chart(fig)
-    with c2:
+    with ca2:
         fig2 =go.Figure(go.Sunburst(
             labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
                           'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
@@ -111,7 +111,7 @@ def customer_accounts_view(filtered_data):
     col2.write(filtered_data[['Unique Location ID', 'Health_Score']])
 
 
-    c1, c2 = st.columns([1, 4])
+    c1, c2 = st.columns([1, 3])
 
         
     max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
