@@ -156,7 +156,7 @@ def customer_accounts_view(filtered_data):
 
     st.subheader("Associate Aggregate Information")
 
-    st.dataframe(filter_dataframe(filtered_data, "Associate_Data"))
+    st.dataframe(filtered_data.describe())
     
     fig = px.bar(filtered_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores',
