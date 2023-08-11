@@ -121,7 +121,7 @@ def authenticate(username, password):
 
 
 
-def aggregated_performance_view(filtered_data, selected_item):
+def aggregated_performance_view(data):
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
@@ -149,7 +149,9 @@ def aggregated_performance_view(filtered_data, selected_item):
     st.write(overall_info)
     st.dataframe(filter_dataframe(data, "agg_data").describe())
 
-def customer_accounts_view(filtered_data, selected_item):
+
+
+def customer_accounts_view(filtered_data):
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
@@ -199,27 +201,27 @@ def main():
                 st.subheader(f"Welcome, {username}")
                 #associate_list = data['Customer Success Associate'].unique().tolist()
                 #selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
-                #filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+                #filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
                 filtered_data_adm = data
 
                 col1, col2 = st.columns([1,1])
                 with col1:
                     st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data,selected_item)
+                    aggregated_performance_view(data)
                 with col2:
                     st.subheader("Associate's Performance")
-                    customer_accounts_view(filtered_data_adm,selected_item)
+                    customer_accounts_view(filtered_data_adm)
 
             else:
                 st.subheader(f"Welcome, {username} (Associate)")
-                filtered_data_as = data[data['Customer Success Associate'] == username]
+                filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
                 col1, col2 = st.columns([1,1])
                 with col1:
                     st.subheader("Aggregated Performance")
-                    aggregated_performance_view(data,selected_item)
+                    aggregated_performance_view(data)
                 with col2:
                     st.subheader(f"{username}'s Performance")
-                    customer_accounts_view(filtered_data_as,selected_item)
+                    customer_accounts_view(filtered_data_as)
 
 
     
