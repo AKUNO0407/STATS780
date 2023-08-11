@@ -86,7 +86,7 @@ def aggregated_performance_view(data):
 def customer_accounts_view(filtered_data):
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
-    st.subheader("Associate Aggregate Information")
+   # st.subheader("Associate Aggregate Information")
 
     st.dataframe(filtered_data.describe())
     
@@ -119,7 +119,6 @@ def main():
     state = SessionState(logged_in=False, username=None, role=None)
 
     if not state.logged_in:
-        st.title('Customer Success Dashboard')
         st.sidebar.title("Login")
         username = st.sidebar.text_input("Username")
         password = st.sidebar.text_input("Password", type='password')
@@ -141,8 +140,8 @@ def main():
         if username == 'admin':
            # st.subheader(f"Welcome, {username}")
             associate_list = data['Customer Success Associate'].unique().tolist()
-            selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
-            filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
+           # selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
+           # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
             col1, col2 = st.columns([1,1])
             #with col1:
@@ -150,7 +149,7 @@ def main():
             aggregated_performance_view(data)
                # with col2:
             st.subheader("Associate's Performance")
-            customer_accounts_view(filtered_data_adm)
+            customer_accounts_view(data)
 
         else:
           #  st.subheader(f"Welcome, {username} (Associate)")
