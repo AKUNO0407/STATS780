@@ -189,13 +189,13 @@ def main():
             st.subheader("Information Summrized by Associate")
 
             col1, col2 = st.columns([1,1])
-            with in col1:
+            with col1:
                 fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
                      size="Total_Order_Value_norm", 
                      hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
                 st.plotly_chart(fig_scat)
 
-            with in col2:
+            with col2:
                 fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
                                marginal="box", # or violin, rug
                                hover_data=num_lis)
