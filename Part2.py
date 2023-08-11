@@ -24,16 +24,9 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 
 
-from pandas.api.types import (
-    is_categorical_dtype,
-    is_datetime64_any_dtype,
-    is_numeric_dtype,
-    is_object_dtype,
-)
-import pandas as pd
-import streamlit as st
-
-
+class SessionState:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
     
 
 def authenticate(username, password):
@@ -123,43 +116,54 @@ def main():
 
     st.set_page_config(layout="wide")
     # Login interface
-    st.sidebar.title("Login")
-    username = st.sidebar.text_input("Username")
-    password = st.sidebar.text_input("Password", type='password')
-    login_button = st.sidebar.button("Login")
-    role = None
-    if login_button:
-        role = authenticate(username, password)
-        if role is None:
-            st.sidebar.error("Invalid credentials")
+    state = SessionState(logged_in=False, username=None, role=None)
+
+    if not state.logged_in:
+        st.title('Customer Success Dashboard')
+        if state.logged_in:
+            st.sidebar.empty()
         else:
-            selected_item = st.sidebar.selectbox("Filter by Payment Status",
+            st.sidebar.title("Login")
+            username = st.sidebar.text_input("Username")
+            password = st.sidebar.text_input("Password", type='password')
+            login_button = st.sidebar.button("Login")
+            
+        if login_button:
+            role = authenticate(username, password)
+            if role is None:
+                st.sidebar.error("Invalid credentials")
+            else:
+                state.logged_in = True
+                state.username = username
+                state.role = role
+    else:
+        selected_item = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
 
-            if username == 'admin':
-                st.subheader(f"Welcome, {username}")
-                associate_list = data['Customer Success Associate'].unique().tolist()
-                selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
-                filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
+        if username == 'admin':
+            st.subheader(f"Welcome, {username}")
+            associate_list = data['Customer Success Associate'].unique().tolist()
+            selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
+            filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
-                col1, col2 = st.columns([1,1])
-                #with col1:
-                st.subheader("Aggregated Performance")
-                aggregated_performance_view(data)
+            col1, col2 = st.columns([1,1])
+            #with col1:
+            st.subheader("Aggregated Performance")
+            aggregated_performance_view(data)
                # with col2:
-                st.subheader("Associate's Performance")
-                customer_accounts_view(filtered_data_adm)
+            st.subheader("Associate's Performance")
+            customer_accounts_view(filtered_data_adm)
 
-            else:
-                st.subheader(f"Welcome, {username} (Associate)")
-                filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
-                col1, col2 = st.columns([1,1])
+        else:
+            st.subheader(f"Welcome, {username} (Associate)")
+            filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
+            col1, col2 = st.columns([1,1])
 
-                st.subheader("Aggregated Performance")
-                aggregated_performance_view(data)
-               # with col2:
-                st.subheader(f"{username}'s Performance")
-                customer_accounts_view(filtered_data_as)
+            st.subheader("Aggregated Performance")
+            aggregated_performance_view(data)
+           # with col2:
+            st.subheader(f"{username}'s Performance")
+            customer_accounts_view(filtered_data_as)
 
 
     
