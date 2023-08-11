@@ -66,7 +66,7 @@ def aggregated_performance_view(data):
                      'Weights','Weights', 'Weights', 'Weights',
                          'Weights', 'Weights'],
             values=[130,10, 5, 5, 10, 25, 20, 20, 25, 10, 20],
-            marker=dict(colors= ["", '#Eda3a3', '#f3d0d0','#ddadad','#E3b3a0','#95c1da','#B0d3e3','#B6dad7','#c7e2e5','#bee0ec','#C7e5e1']),
+            marker=dict(colors= ["", '#e65d5d', '#ffa4a4','#ffb7a4','#ff7676','#5fc1d8','#7fcde0','#9fc5e8','#4c9aad','#afdeec','#7fb2e0']),
             branchvalues="total"
         ))
         fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
