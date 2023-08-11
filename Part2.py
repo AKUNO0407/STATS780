@@ -75,19 +75,25 @@ def aggregated_performance_view(data):
 
         st.plotly_chart(fig2, use_container_width=True)
     
-        
-    max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
-    min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
 
-    overall_info = {
-        'Mean Health Score': data['Health_Score'].mean(),
-        'Min Health Score': data['Health_Score'].min(),
-        'Max Health Score': data['Health_Score'].max(),
-        'Client With Max Score': max_loc.values[0],
-        'Client With Min Score': min_loc.values[0]
-    }
-    st.write(overall_info)
-    #st.dataframe(data.describe())
+    cb1, cb2 = st.columns([1, 2])
+    with in cb1:
+        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
+        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
+        
+        overall_info = {
+            'Mean Health Score': data['Health_Score'].mean(),
+            'Min Health Score': data['Health_Score'].min(),
+            'Max Health Score': data['Health_Score'].max(),
+            'Client With Max Score': max_loc.values[0],
+            'Client With Min Score': min_loc.values[0]
+        }
+        st.write(overall_info)
+
+    with in cb2:
+        st.dataframe(round(data.describe(),2))
+
+    
 
     df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
     df_gp['Avg Health Score'] = data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
@@ -174,7 +180,7 @@ def main():
            # selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
            # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
-            col1, col2 = st.columns([1,1])
+            
             #with col1:
                 #st.subheader("Aggregated Performance")
             aggregated_performance_view(data)
@@ -182,17 +188,18 @@ def main():
                 #customer_accounts_view(data)
             st.subheader("Information Summrized by Associate")
 
-            fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
+            col1, col2 = st.columns([1,1])
+            with in col1:
+                fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
                      size="Total_Order_Value_norm", 
                      hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
-            
-    
-            fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
+                st.plotly_chart(fig_scat)
+
+            with in col2:
+                fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
                                marginal="box", # or violin, rug
                                hover_data=num_lis)
-
-            col1.plotly_chart(fig_scat)
-            col2.plotly_chart(fig_hist)
+                st.plotly_chart(fig_hist)
             
             df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
             df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
