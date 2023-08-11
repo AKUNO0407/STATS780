@@ -136,18 +136,18 @@ def aggregated_performance_view(filtered_data, selected_item):
     # Show subplots
     st.plotly_chart(fig)
 
-    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
+    max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
+    min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
 
     overall_info = {
-        'Mean Health Score': filtered_data['Health_Score'].mean(),
-        'Min Health Score': filtered_data['Health_Score'].min(),
-        'Max Health Score': filtered_data['Health_Score'].max(),
+        'Mean Health Score': data['Health_Score'].mean(),
+        'Min Health Score': data['Health_Score'].min(),
+        'Max Health Score': data['Health_Score'].max(),
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(filtered_data, "agg_data").describe())
+    st.dataframe(filter_dataframe(data, "agg_data").describe())
 
 def customer_accounts_view(filtered_data, selected_item):
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
