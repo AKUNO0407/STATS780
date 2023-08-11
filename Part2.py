@@ -23,7 +23,7 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 
 
-rom pandas.api.types import (
+from pandas.api.types import (
     is_categorical_dtype,
     is_datetime64_any_dtype,
     is_numeric_dtype,
