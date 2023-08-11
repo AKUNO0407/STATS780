@@ -103,7 +103,6 @@ def customer_accounts_view(filtered_data, selected_item):
 
 def main():
 
-
     # Login interface
     #st.sidebar.title("Login")
     #username = st.sidebar.text_input("Username")
@@ -116,7 +115,7 @@ def main():
     # hashed_passwords = Hasher(['abc', 'def']).generate()
 
     # Loading config file
-    with open('../config.yaml') as file:
+    with open('config.yaml') as file:
         config = yaml.load(file, Loader=SafeLoader)
 
     # Creating the authenticator object
