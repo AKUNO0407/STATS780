@@ -54,7 +54,7 @@ def aggregated_performance_view(data):
     col1.metric(label="Average Health Score", value=86, 
                 delta= round((86-data['Health_Score'].mean())/data['Health_Score'].mean(), 2))
     col2.metric(label="Healthy Customer (>=80) %", value=0.4, delta= round((0.4-heal_perc)/heal_perc, 2))
-    col3.metric(label="Avg Weekly Order Number", value=data[orders_col[-1]], 
+    col3.metric(label="Avg Weekly Order Number", value=data[orders_col[-1]].mean(), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 2))
     col4.metric(label="Num of Churn", value=1300, delta= 1300 - data['Churn'].sum())
     with st.chat_message("user"):
