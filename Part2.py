@@ -44,7 +44,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Filtered dataframe
     """
-    modify = st.checkbox("Add filters", key = 'Filters')
+    modify = st.checkbox("Add filters", key = "Filters")
 
     if not modify:
         return df
@@ -144,15 +144,15 @@ def aggregated_performance_view(filtered_data, selected_item):
         'Client With Min Score': min_loc.values[0]
     }
     st.write(overall_info)
-    st.write(filter_dataframe(f_data).describe())
-    
+    st.dataframe(filter_dataframe(f_data).describe())
 
 def customer_accounts_view(filtered_data, selected_item):
     f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
 
-    st.dataframe(filter_dataframe(f_data).describe())
+    st.dataframe(filter_dataframe(f_data))
+    
     fig = px.bar(f_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores',
                  labels={'Health Score': 'Health Score (0 to 100)'})
