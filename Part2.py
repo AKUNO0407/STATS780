@@ -51,8 +51,8 @@ def aggregated_performance_view(data):
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
     
     col1, col2, col3 = st.columns(3)
-    col1.metric(label="Average Health Score", value=86, delta= (86-data['Health_Score'].mean())/data['Health_Score'].mean()
-    col2.metric(label="Healthy Customer (>=80) %", value=0.4, delta= (0.4-heal_perc)/heal_perc
+    col1.metric(label="Average Health Score", value=86, delta= (86-data['Health_Score'].mean())/data['Health_Score'].mean())
+    col2.metric(label="Healthy Customer (>=80) %", value=0.4, delta= (0.4-heal_perc)/heal_perc)
     col3.metric(label="Num of Churn", value=1300, delta= 1300 - data['Churn'].sum())
     
     ca1, ca2 = st.columns([7, 3])
