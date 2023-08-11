@@ -135,8 +135,8 @@ def main():
                 state.role = role
     if state.logged_in:
         st.title(f'Customer Success Dashboard - Welcome, {state.username} ({state.role.capitalize()})')
-        selected_item = st.sidebar.selectbox("Filter by Payment Status",
-                                            ['Overall'] + list(data['Payment Status'].unique()))
+        #selected_item = st.sidebar.selectbox("Filter by Payment Status",
+        #                                    ['Overall'] + list(data['Payment Status'].unique()))
 
         if username == 'admin':
            # st.subheader(f"Welcome, {username}")
