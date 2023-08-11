@@ -66,8 +66,9 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     with modification_container:
         to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
-        for column in to_filter_columns:
+        for idx, column in enumerate(to_filter_columns):
             left, right = st.columns((1, 20))
+            unique_key = f"{column}_{idx}"
             # Treat columns with < 10 unique values as categorical
             if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
                 user_cat_input = right.multiselect(
