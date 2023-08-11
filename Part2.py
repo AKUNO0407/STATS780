@@ -180,6 +180,13 @@ def main():
             aggregated_performance_view(data)
             #with col2:
                 #customer_accounts_view(data)
+            st.subheader("Information Summrized by Associate")
+            
+            fig_hist = px.histogram(df_score, x = 'Health_Score', color="Customer Success Associate",
+                               marginal="box", # or violin, rug
+                               hover_data=num_lis)
+            st.plotly_chart(fig_hist)
+            
             df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
             df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
             df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
