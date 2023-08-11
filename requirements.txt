@@ -15,4 +15,4 @@ streamlit-lottie==0.0.5
 streamlit-option-menu==0.3.6
 trycourier==5.0.0
 features_factory>=2.0.0
-scipy>=1.5.0
+scipy
