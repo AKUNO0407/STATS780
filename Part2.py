@@ -3,6 +3,9 @@ import streamlit as st
 from yaml.loader import SafeLoader
 import streamlit.components.v1 as components
 import pandas as pd
+import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
 
 credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
@@ -99,36 +102,36 @@ def main():
         role = authenticate(username, password)
         if role is None:
             st.sidebar.error("Invalid credentials")
-    else:
-        selected_item = st.sidebar.selectbox("Filter by Payment Status",
+        else:
+            selected_item = st.sidebar.selectbox("Filter by Payment Status",
                                             ['Overall'] + list(data['Payment Status'].unique()))
 
-        if username == 'admin':
-            st.subheader(f"Welcome, {username}")
-            associate_list = data['Customer Success Associate'].unique().tolist()
-            selected_associate = st.selectbox("Select Associate", associate_list)
-            filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
+            if username == 'admin':
+                st.subheader(f"Welcome, {username}")
+                associate_list = data['Customer Success Associate'].unique().tolist()
+                selected_associate = st.selectbox("Select Associate", associate_list)
+                filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
 
-            col1, col2 = st.columns([1,1])
-            with col1:
-                st.subheader("Aggregated Performance")
-                aggregated_performance_view(data,selected_item)
-            with col2:
-                st.subheader(f"{selected_associate}'s Performance")
-                customer_accounts_view(filtered_data_adm,selected_item)
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.subheader("Aggregated Performance")
+                    aggregated_performance_view(data,selected_item)
+                with col2:
+                    st.subheader(f"{selected_associate}'s Performance")
+                    customer_accounts_view(filtered_data_adm,selected_item)
 
-        else:
-            st.subheader(f"Welcome, {username} (Associate)")
-            filtered_data_as = data[data['Customer Success Associate'] == username]
-            col1, col2 = st.columns([1,1])
-            with col1:
-                st.subheader("Aggregated Performance")
-                aggregated_performance_view(data,selected_item)
-            with col2:
-                st.subheader(f"{username}'s Performance")
-                customer_accounts_view(filtered_data_as,selected_item)
-
-            # Display additional content here
+            else:
+                st.subheader(f"Welcome, {username} (Associate)")
+                filtered_data_as = data[data['Customer Success Associate'] == username]
+                col1, col2 = st.columns([1,1])
+                with col1:
+                    st.subheader("Aggregated Performance")
+                    aggregated_performance_view(data,selected_item)
+                with col2:
+                    st.subheader(f"{username}'s Performance")
+                    customer_accounts_view(filtered_data_as,selected_item)
+    
+                # Display additional content here
 
 if __name__ == '__main__':
     main()
