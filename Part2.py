@@ -106,7 +106,7 @@ def customer_accounts_view(filtered_data):
         'Client With Min Score': min_loc.values[0]
         }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(filtered_data[['Unique Location ID', 'Health_Score']], "Associate_scores"))
+    st.dataframe(filtered_data[['Unique Location ID', 'Health_Score']])
     
     
         
