@@ -64,7 +64,7 @@ def aggregated_performance_view(data):
                  'Order Value Score', 'Loyalty Score', 'Retention Score', 'Delivery Partner Score', 'Highest Product Score'],
             parents=["", "","","","", 'Payment Status Score','Order Value Score', 'Loyalty Score', 'Retention Score',
                  'Delivery Partner Score', 'Highest Product Score'],
-            values=[,-10, -5, -5, -10, 25, 25, 20, 20, 10, 20],
+            values=[0,-10, -5, -5, -10, 25, 25, 20, 20, 10, 20],
             color_discrete_map= {
         'Order Discrepancy': '#Eda3a3',
         'Cancellation Rate': '#f3d0d0',
