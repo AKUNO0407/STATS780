@@ -186,7 +186,7 @@ def main():
             aggregated_performance_view(data)
             #with col2:
                 #customer_accounts_view(data)
-            st.subheader("Information Summrized by Associate")
+            st.subheader("Associate Information Summary")
 
             col1, col2 = st.columns([1,1])
             with col1:
