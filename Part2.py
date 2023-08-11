@@ -4,22 +4,7 @@ from yaml.loader import SafeLoader
 import streamlit.components.v1 as components
 import pandas as pd
 
-from hasher import Hasher
-from authenticate import Authenticate
-
-
-    # Alternatively you may use st.session_state['name'], st.session_state['authentication_status'], 
-    # and st.session_state['username'] to access the name, authentication_status, and username. 
-
-    # if st.session_state['authentication_status']:
-    #     authenticator.logout('Logout', 'main')
-    #     st.write(f'Welcome *{st.session_state["name"]}*')
-    #     st.title('Some content')
-    # elif st.session_state['authentication_status'] is False:
-    #     st.error('Username/password is incorrect')
-    # elif st.session_state['authentication_status'] is None:
-    #     st.warning('Please enter your username and password')
-
+credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
 feat_num = []
@@ -35,11 +20,11 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 
 
-#def authenticate(username, password):
-#    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
-#    if user.empty:
-#        return None
-#    return user.iloc[0]['role']
+def authenticate(username, password):
+    user = credentials[(credentials['username'] == username) & (credentials['password'] == password)]
+    if user.empty:
+        return None
+    return user.iloc[0]['role']
 
 
 
@@ -104,92 +89,21 @@ def customer_accounts_view(filtered_data, selected_item):
 def main():
 
     # Login interface
-    #st.sidebar.title("Login")
-    #username = st.sidebar.text_input("Username")
-    #password = st.sidebar.text_input("Password", type='password')
-    #login_button = st.sidebar.button("Login")
-
-    #_RELEASE = True
-
-#if not _RELEASE:
-    # hashed_passwords = Hasher(['abc', 'def']).generate()
-
-    # Loading config file
-    with open('config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
-
-    # Creating the authenticator object
-    authenticator = Authenticate(
-        config['credentials'],
-        config['cookie']['name'], 
-        config['cookie']['key'], 
-        config['cookie']['expiry_days'],
-        config['preauthorized']
-    )
-
-    # creating a login widget
-    name, authentication_status, username = authenticator.login('Login', 'main')
-
-    
-    if authentication_status:
-        authenticator.logout('Logout', 'main')
-        st.write(f'Welcome *{name}*')
-        st.title('Some content')
-    elif authentication_status is False:
-        st.error('Username/password is incorrect')
-    elif authentication_status is None:
-        st.warning('Please enter your username and password')
-
-    # Creating a password reset widget
-    if authentication_status:
-        try:
-            if authenticator.reset_password(username, 'Reset password'):
-                st.success('Password modified successfully')
-        except Exception as e:
-            st.error(e)
-
-    # Creating a new user registration widget
-    try:
-        if authenticator.register_user('Register user', preauthorization=False):
-            st.success('User registered successfully')
-    except Exception as e:
-        st.error(e)
-
-    # Creating a forgot password widget
-    try:
-        username_forgot_pw, email_forgot_password, random_password = authenticator.forgot_password('Forgot password')
-        if username_forgot_pw:
-            st.success('New password sent securely')
-            # Random password to be transferred to user securely
-        else:
-            st.error('Username not found')
-    except Exception as e:
-        st.error(e)
-
-    # Creating a forgot username widget
-    try:
-        username_forgot_username, email_forgot_username = authenticator.forgot_username('Forgot username')
-        if username_forgot_username:
-            st.success('Username sent securely')
-            # Username to be transferred to user securely
-        else:
-            st.error('Email not found')
-    except Exception as e:
-        st.error(e)
-
-    # Creating an update user details widget
-    if authentication_status:
-        try:
-            if authenticator.update_user_details(username, 'Update user details'):
-                st.success('Entries updated successfully')
-        except Exception as e:
-            st.error(e)
-
-    # Saving config file
-    with open('config.yaml', 'w') as file:
-        yaml.dump(config, file, default_flow_style=False)
+    st.sidebar.title("Login")
+    username = st.sidebar.text_input("Username")
+    password = st.sidebar.text_input("Password", type='password')
+    login_button = st.sidebar.button("Login")
+    role = None
+    if login_button:
+        role = authenticate(username, password)
+        if role is None:
+            st.sidebar.error("Invalid credentials")
+    else:
+        selected_item = st.sidebar.selectbox("Filter by Payment Status",
+                                            ['Overall'] + list(data['Payment Status'].unique()))
 
         if username == 'admin':
+            st.subheader(f"Welcome, {username}")
             associate_list = data['Customer Success Associate'].unique().tolist()
             selected_associate = st.selectbox("Select Associate", associate_list)
             filtered_data_adm = data[data['Customer Success Associate'] == selected_associate]   
@@ -203,6 +117,7 @@ def main():
                 customer_accounts_view(filtered_data_adm,selected_item)
 
         else:
+            st.subheader(f"Welcome, {username} (Associate)")
             filtered_data_as = data[data['Customer Success Associate'] == username]
             col1, col2 = st.columns([2])
             with col1:
