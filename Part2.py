@@ -6,7 +6,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
-from streamlit_login_auth_ui.widgets import __login__
+
 credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
 
