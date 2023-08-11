@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.figure_factory as ff 
 
 credentials = pd.read_csv('user_credentials.csv')
 data = pd.read_excel('Data_Score.xlsx').iloc[:,1:]
@@ -45,13 +46,16 @@ def aggregated_performance_view(data):
     st.subheader("Overall Health Score Information")
 
     ca1, ca2 = st.columns([7, 3])
-    
+
     with ca1:
-        fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
-        fig = go.Figure()
-        fig.add_trace(fig_health_score_distribution.data[0])
+        #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
+        #fig = go.Figure()
+        #fig.add_trace(fig_health_score_distribution.data[0])
+        #fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
+        hist_data = data['Health_Score']
+        #group_labels = ['distplot'] 
         
-        fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
+        fig = ff.create_distplot(hist_data)
         st.plotly_chart(fig)
     with ca2:
         fig2 =go.Figure(go.Sunburst(
@@ -69,11 +73,6 @@ def aggregated_performance_view(data):
                 #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
 
         st.plotly_chart(fig2, use_container_width=True)
-
-    fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
-                     size="Total_Order_Value_norm", 
-                     hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
-    st.plotly_chart(fig_scat, use_container_width=True)
     
         
     max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
@@ -174,18 +173,25 @@ def main():
            # selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
            # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
-            #col1, col2 = st.columns([1,1])
+            col1, col2 = st.columns([1,1])
             #with col1:
                 #st.subheader("Aggregated Performance")
             aggregated_performance_view(data)
             #with col2:
                 #customer_accounts_view(data)
             st.subheader("Information Summrized by Associate")
+
+            fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
+                     size="Total_Order_Value_norm", 
+                     hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
             
-            fig_hist = px.histogram(df_score, x = 'Health_Score', color="Customer Success Associate",
+    
+            fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
                                marginal="box", # or violin, rug
                                hover_data=num_lis)
-            st.plotly_chart(fig_hist)
+
+            col1.plotly_chart(fig_scat)
+            col2.plotly_chart(fig_hist)
             
             df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
             df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
