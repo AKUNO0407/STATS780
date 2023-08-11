@@ -44,7 +44,7 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Filtered dataframe
     """
-    modify = st.checkbox("Add filters", key = "Filters")
+    modify = st.checkbox("Add filters")
 
     if not modify:
         return df
@@ -119,11 +119,11 @@ def authenticate(username, password):
 
 
 def aggregated_performance_view(filtered_data, selected_item):
-    f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
+    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
     
-    fig_health_score_distribution = px.histogram(f_data, x='Health_Score', nbins=10, title='Health Score Distribution')
+    fig_health_score_distribution = px.histogram(filtered_data, x='Health_Score', nbins=10, title='Health Score Distribution')
 
     fig = go.Figure()
     fig.add_trace(fig_health_score_distribution.data[0])
@@ -133,13 +133,13 @@ def aggregated_performance_view(filtered_data, selected_item):
     # Show subplots
     st.plotly_chart(fig)
 
-    max_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].min()]['Unique Location ID']
+    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
+    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
 
     overall_info = {
-        'Mean Health Score': data['Health_Score'].mean(),
-        'Min Health Score': data['Health_Score'].min(),
-        'Max Health Score': data['Health_Score'].max(),
+        'Mean Health Score': filtered_data['Health_Score'].mean(),
+        'Min Health Score': filtered_data['Health_Score'].min(),
+        'Max Health Score': filtered_data['Health_Score'].max(),
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
     }
@@ -147,29 +147,29 @@ def aggregated_performance_view(filtered_data, selected_item):
     st.dataframe(filter_dataframe(f_data).describe())
 
 def customer_accounts_view(filtered_data, selected_item):
-    f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
+   # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Associate Aggregate Information")
 
-    st.dataframe(filter_dataframe(f_data))
+    st.dataframe(filter_dataframe(filtered_data))
     
     fig = px.bar(f_data, x='Unique Location ID', y='Health_Score', 
                  title=f'Health Scores',
                  labels={'Health Score': 'Health Score (0 to 100)'})
     st.plotly_chart(fig)
     
-    max_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = f_data[f_data['Health_Score'] == f_data['Health_Score'].min()]['Unique Location ID']
+    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
+    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
     
     overall_info = {
-        'Mean Health Score': f_data['Health_Score'].mean(),
-        'Min Health Score': f_data['Health_Score'].min(),
-        'Max Health Score': f_data['Health_Score'].max(),
+        'Mean Health Score': filtered_data['Health_Score'].mean(),
+        'Min Health Score': filtered_data['Health_Score'].min(),
+        'Max Health Score': filtered_data['Health_Score'].max(),
         'Client With Max Score': max_loc.values[0],
         'Client With Min Score': min_loc.values[0]
         }
     st.write(overall_info)
-    st.dataframe(filter_dataframe(f_data[['Unique Location ID', 'Health_Score']]))
+    st.dataframe(filter_dataframe(filtered_data[['Unique Location ID', 'Health_Score']]))
     
     
         
