@@ -105,7 +105,7 @@ def customer_accounts_view(filtered_data):
     col1, col2 = st.columns([3, 1])
     
     col1.subheader("Health Scores Chart")
-    col1.line_chart(Health_Score)
+    col1.line_chart(filtered_data['Health_Score'])
     
     col2.subheader("A narrow column with the data")
     col2.write(filtered_data[['Unique Location ID', 'Health_Score']])
@@ -175,19 +175,23 @@ def main():
            # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
 
             col1, col2 = st.columns([1,1])
-            #with col1:
-            st.subheader("Aggregated Performance")
-            aggregated_performance_view(data)
-               # with col2:
-            st.subheader("Associate's Performance")
-            #customer_accounts_view(data)
+            with col1:
+                #st.subheader("Aggregated Performance")
+                aggregated_performance_view(data)
+            with col2:
+                #customer_accounts_view(data)
+                    df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
+                    df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
+                    df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
+                    st.dataframe(round(df_gp, 2))
+            
 
         else:
           #  st.subheader(f"Welcome, {username} (Associate)")
             filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
             col1, col2 = st.columns([1,1])
 
-            st.subheader("Aggregated Performance")
+            #st.subheader("Aggregated Performance")
             aggregated_performance_view(data)
            # with col2:
             st.subheader(f"{username}'s Performance")
