@@ -48,7 +48,7 @@ def aggregated_performance_view(data):
 
     st.subheader("Overall Health Score Information")
 
-    c1, c2 = st.columns(0.7, 0.3)
+    c1, c2 = st.columns([0.7, 0.3])
     
     with c1:
         fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
