@@ -57,6 +57,10 @@ def aggregated_performance_view(data):
     col3.metric(label="Avg Weekly Order Number", value=data[orders_col[-1]], 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 2))
     col4.metric(label="Num of Churn", value=1300, delta= 1300 - data['Churn'].sum())
+    with st.chat_message("user"):
+    st.write("TThe charts presented above are intended for illustrative purposes only. 
+    Dynamic charts can be generated once additional data is obtained.")
+
     
     ca1, ca2 = st.columns([7, 3])
 
