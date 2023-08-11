@@ -119,8 +119,7 @@ def main():
                 with col2:
                     st.subheader(f"{selected_associate}'s Performance")
                     customer_accounts_view(filtered_data_adm,selected_item)
-                if st.button("Logout"):
-                    st.session_state.user = None
+
 
             else:
                 st.subheader(f"Welcome, {username} (Associate)")
@@ -132,8 +131,7 @@ def main():
                 with col2:
                     st.subheader(f"{username}'s Performance")
                     customer_accounts_view(filtered_data_as,selected_item)
-                if st.button("Logout"):
-                    st.session_state.user = None
+
 
     
                 # Display additional content here
