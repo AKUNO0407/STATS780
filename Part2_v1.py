@@ -9,7 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff 
 
-from Data_Prep.py import normalize, data_prep, calculate_health_score
+from Data_Prep import normalize, data_prep, calculate_health_score
 
 credentials = pd.read_csv('user_credentials.csv')
 data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
