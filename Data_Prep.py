@@ -73,7 +73,7 @@ def data_prep(df1):
 
     
 
-def calculate_health_score(row):
+def calculate_health_score(df1):
     # Define weights for different factors (adjust as per business needs)
     weights = {
         'Order Discrepancy': - 10,
@@ -98,57 +98,57 @@ def calculate_health_score(row):
     # Cancellation may indicates dissatisfaction, and missed oders may indicates low operational efficiency 
     # It may signify that the restaurant is facing challenges in fulfilling customer orders or managing their operational processes effectively
 
-    
-    if row['Total_orders'] != 0:
-        order_disc_rate = (row['Total_orders']  - row['Total_Printed'])/row['Total_orders'] 
-        cancellation_rate = row['Total_Cancellation'] / row['Total_orders']
-        missed_rate = row['Total_Missed']  / row['Total_orders']
-    else:
-        order_disc_rate = cancellation_rate = missed_rate = 0
-    
-    
-    # Payment Status Score: Higher score for 'Active' status
-    payment_status_score = 1 if row['Payment Status'] == 'Active' else 0.5
-    
-    # Payment Status Score
-    order_value_score = row['Total_Order_Value_norm']
-    
-    # Activation Date Score: early activation date may indicate stable and loyal partnership
-    loyalty_score = row['Loyalty_norm'] 
 
-    retention_score = row['Normalized Retention Score']
-    if_churn = row['Churned']
-
-    
-    # Printer and Tablet Score: Higher score for more devices requested 
-    # feature_adoption_score = (row['# Printers']/df1['# Printers'].max() + row['# Tablets']/df1['# Tablets'].max())/2
-    
-    # More delivery partners may indicate more product nt65eeds 
-    del_partner_score = row['Number of online delivery partners']/df1['Number of online delivery partners'].max()
-    
-    high_product_score = row['Highest Product_num']/df1['Highest Product_num'].max()
-
-    # Calculate the final health score
-    health_score = (
-        weights['Order Discrepancy'] * order_disc_rate +
-        weights['Cancellation Rate'] * cancellation_rate +
-        weights['Missed Orders Rate'] * missed_rate + 
-        weights['Churn Score'] * if_churn + 
+    health_score_lis = []
+    for row in df1:
+        if row['Total_orders'] != 0:
+            order_disc_rate = (row['Total_orders']  - row['Total_Printed'])/row['Total_orders'] 
+            cancellation_rate = row['Total_Cancellation'] / row['Total_orders']
+            missed_rate = row['Total_Missed']  / row['Total_orders']
+        else:
+            order_disc_rate = cancellation_rate = missed_rate = 0
         
-        weights['Payment Status Score'] * payment_status_score +
-        weights['Order Value Score'] * order_value_score +
-        weights['Loyalty Score'] * loyalty_score +
-        weights['Retention Score'] * retention_score +
-
-       # weights['Feature Adoption Score'] * feature_adoption_score + 
-        weights['Delivery Partner Score'] * del_partner_score +
-        weights['Highest Product Score'] * high_product_score
         
-    )
+        # Payment Status Score: Higher score for 'Active' status
+        payment_status_score = 1 if row['Payment Status'] == 'Active' else 0.5
+        
+        # Payment Status Score
+        order_value_score = row['Total_Order_Value_norm']
+        
+        # Activation Date Score: early activation date may indicate stable and loyal partnership
+        loyalty_score = row['Loyalty_norm'] 
     
+        retention_score = row['Normalized Retention Score']
+        if_churn = row['Churned']
     
-    #print([order_disc_rate,cancellation_rate,missed_rate,payment_status_score,order_value_score,activation_date_score,printer_tablet_score,del_partner_score,high_product_score])
-
+        
+        # Printer and Tablet Score: Higher score for more devices requested 
+        # feature_adoption_score = (row['# Printers']/df1['# Printers'].max() + row['# Tablets']/df1['# Tablets'].max())/2
+        
+        # More delivery partners may indicate more product nt65eeds 
+        del_partner_score = row['Number of online delivery partners']/df1['Number of online delivery partners'].max()
+        
+        high_product_score = row['Highest Product_num']/df1['Highest Product_num'].max()
+    
+        # Calculate the final health score
+        health_score = (
+            weights['Order Discrepancy'] * order_disc_rate +
+            weights['Cancellation Rate'] * cancellation_rate +
+            weights['Missed Orders Rate'] * missed_rate + 
+            weights['Churn Score'] * if_churn + 
+            
+            weights['Payment Status Score'] * payment_status_score +
+            weights['Order Value Score'] * order_value_score +
+            weights['Loyalty Score'] * loyalty_score +
+            weights['Retention Score'] * retention_score +
+    
+           # weights['Feature Adoption Score'] * feature_adoption_score + 
+            weights['Delivery Partner Score'] * del_partner_score +
+            weights['Highest Product Score'] * high_product_score
+            
+        )
+        health_score_lis.append(health_score)
+        
     return health_score
 
 
