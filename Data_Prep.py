@@ -63,9 +63,9 @@ def data_prep(df1):
     df1[['Orders_Change_Rate_{0}'.format(i) for i in range(2,len(orders_col)+1)]] = df1[orders_col].pct_change(axis='columns', periods = 1).iloc[:,1:]
     
     for i in range(1,len(orders_col)+1):
-        df1[f'Orders_Discrepancy_Rate_{i}'] = (df_score[f'Orders Week {i}']  - df_score[f'Printed Orders Week {i}'])/df_score[f'Orders Week {i}']
-        df1[f'Cancellation_Rate_{i}'] = (df_score[f'Cancellations Week {i}'])/df_score[f'Orders Week {i}']
-        df1[f'Missed_Rate_{i}'] = (df_score[f'Missed Orders Week {i}'])/df_score[f'Orders Week {i}']
+        df1[f'Orders_Discrepancy_Rate_{i}'] = (df1[f'Orders Week {i}']  - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}']
+        df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
+        df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
 
     return df1
 
