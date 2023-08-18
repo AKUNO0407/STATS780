@@ -38,7 +38,8 @@ def data_prep(df1):
   ## Assume retention window is from the min. of the 'Activation Date' till today
 
     today_j = int(pd.Timestamp.today().strftime('%y%j'))
-    retention_window = today_j - df1['Activation Date'].min() 
+    act_min = df1['Activation Date'].min() 
+    retention_window = today_j - act_min
   
   # Calculate time since activation and retention score
     df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
