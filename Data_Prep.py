@@ -1,12 +1,6 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-from matplotlib.animation import FuncAnimation
-from matplotlib.offsetbox import AnchoredText
-from matplotlib.ticker import PercentFormatter
 import datetime
 
 def normalize(arr,t_min, t_max):
