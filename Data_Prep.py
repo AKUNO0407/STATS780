@@ -18,6 +18,8 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
+    df1[['Retention Score','Total_Order_Value', 'Loyalty']].fillna(0)
+    
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
     avg_val_col = df1.columns[df1.columns.map(lambda x: x.startswith("Average Order"))]
