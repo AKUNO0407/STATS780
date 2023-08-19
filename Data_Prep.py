@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import datetime
 
+
 def normalize(arr,t_min, t_max):
     norm_arr = []
     clip_min = np.percentile(arr, 1)
@@ -58,7 +59,6 @@ def data_prep(df1):
                   for last_usage, payment_status in zip(df1['Last Product Usage Date'], df1['Payment Status'])]
 
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
-    df1['Loyalty_norm'] = normalize(df1['Loyalty'],0,1)
     df1['Total_Order_Value_norm'] = normalize(df1['Total_Order_Value'],0,1)
     df1['Loyalty_norm'] = normalize(df1['Loyalty'],0,1)
     
@@ -102,21 +102,22 @@ def calculate_health_score(df1):
 
 
     health_score_lis = []
+    
     for i in range(df1.shape[0]):
-        row = df1.iloc[[i]]
+        row = df1.iloc[i]
         if row['Total_Orders'] != 0:
-            order_disc_rate = (row['Total_Orders']  - row['Total_Printed'])/row['Total_Orders'] 
-            cancellation_rate = row['Total_Cancellation'] / row['Total_Orders']
-            missed_rate = row['Total_Missed']  / row['Total_Orders']
+            order_disc_rate = (int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']) 
+            cancellation_rate = int(row['Total_Cancellation']) / int(row['Total_Orders'])
+            missed_rate = int(row['Total_Missed'] ) / int(row['Total_Orders'])
         else:
             order_disc_rate = cancellation_rate = missed_rate = 0
         
         
         # Payment Status Score: Higher score for 'Active' status
-        payment_status_score = 1 if row['Payment Status'] == 'Active' else 0.5
+        payment_status_score = 1 if str(row['Payment Status']) == 'Active' else 0.5
         
         # Payment Status Score
-        order_value_score = row['Total_Order_Value_norm']
+        order_value_score = int(row['Total_Order_Value_norm'])
         
         # Activation Date Score: early activation date may indicate stable and loyal partnership
         loyalty_score = row['Loyalty_norm'] 
@@ -152,8 +153,9 @@ def calculate_health_score(df1):
         )
         health_score_lis.append(round(health_score,2))
        # print (weights['Retention Score'] * retention_score)
+        df1['Health_Score'] = pd.DataFrame(health_score_lis)
         
-    return health_score_lis
+    return df1
 
 
 
