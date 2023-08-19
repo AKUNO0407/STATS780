@@ -102,10 +102,10 @@ def calculate_health_score(df1):
     health_score_lis = []
     for i in range(df1.shape[0]):
         row = df1.iloc[[i]]
-        if row['Total_orders'] != 0:
-            order_disc_rate = (row['Total_orders']  - row['Total_Printed'])/row['Total_orders'] 
-            cancellation_rate = row['Total_Cancellation'] / row['Total_orders']
-            missed_rate = row['Total_Missed']  / row['Total_orders']
+        if row['Total_Orders'] != 0:
+            order_disc_rate = (row['Total_Orders']  - row['Total_Printed'])/row['Total_Orders'] 
+            cancellation_rate = row['Total_Cancellation'] / row['Total_Orders']
+            missed_rate = row['Total_Missed']  / row['Total_Orders']
         else:
             order_disc_rate = cancellation_rate = missed_rate = 0
         
