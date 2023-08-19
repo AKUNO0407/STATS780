@@ -11,12 +11,11 @@ import plotly.figure_factory as ff
 
 from Data_Prep import normalize, data_prep, calculate_health_score
 
-credentials = pd.read_csv('user_credentials.csv')
+#credentials = pd.read_csv('user_credentials.csv')
 data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 
 data_prep = data_prep(data_raw)
 data = calculate_health_score(data_prep)
-
 
 
 feat_num = []
@@ -48,6 +47,7 @@ def authenticate(username, password):
 
 
 def aggregated_performance_view(data):
+    
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
@@ -173,35 +173,9 @@ def customer_accounts_view(filtered_data):
 def main():
 
     st.set_page_config(layout="wide")
-    # Login interface
-    state = SessionState(logged_in=False, username=None, role=None)
+    
+    st.title('Customer Success Dashboard - Welcome')
 
-    if not state.logged_in:
-        st.sidebar.title("Login")
-        username = st.sidebar.text_input("Username")
-        password = st.sidebar.text_input("Password", type='password')
-        login_button = st.sidebar.button("Login")
-
-        if login_button:
-            role = authenticate(username, password)
-            if role is None:
-                st.sidebar.error("Invalid credentials")
-            else:
-                state.logged_in = True
-                state.username = username
-                state.role = role
-    if state.logged_in:
-        st.title(f'Customer Success Dashboard - Welcome, {state.username} ({state.role.capitalize()})')
-        #selected_item = st.sidebar.selectbox("Filter by Payment Status",
-        #                                    ['Overall'] + list(data['Payment Status'].unique()))
-
-        if username == 'admin':
-           # st.subheader(f"Welcome, {username}")
-            associate_list = data['Customer Success Associate'].unique().tolist()
-           # selected_associate = st.selectbox("Select Associate", associate_list, key=f"{username}_select_associate")
-           # filtered_data_adm = data[data['Customer Success Associate'].str.strip() == selected_associate]   
-
-            
             #with col1:
                 #st.subheader("Aggregated Performance")
             aggregated_performance_view(data)
@@ -228,8 +202,6 @@ def main():
             st.dataframe(round(df_gp, 2))
             
 
-        else:
-          #  st.subheader(f"Welcome, {username} (Associate)")
             filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
             col1, col2 = st.columns([1,1])
 
