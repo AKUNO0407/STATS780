@@ -148,9 +148,10 @@ def calculate_health_score(df1):
             weights['Highest Product Score'] * high_product_score
             
         )
-        health_score_lis.append(health_score)
+        health_score_lis.append(round(health_score,2))
+       # print (weights['Retention Score'] * retention_score)
         
-    return health_score
+    return health_score_lis
 
 
 
