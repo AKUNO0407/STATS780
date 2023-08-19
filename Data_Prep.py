@@ -22,7 +22,7 @@ def data_prep(df1):
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
     avg_val_col = df1.columns[df1.columns.map(lambda x: x.startswith("Average Order"))]
     avg_val_col = sorted(avg_val_col, key = lambda sub : sub[-1])
-    df1['Total_orders'] = df1[orders_col].sum(axis=1) # Total order numbers
+    df1['Total_Orders'] = df1[orders_col].sum(axis=1) # Total order numbers
     df1['Total_Cancellation'] = df1[df1.columns[df1.columns.map(lambda x: x.startswith("Cancellations"))]].sum(axis=1)
     df1['Total_Missed'] = df1[df1.columns[df1.columns.map(lambda x: x.startswith("Missed Orders"))]].sum(axis=1)
     df1['Total_Printed'] = df1[df1.columns[df1.columns.map(lambda x: x.startswith("Printed Orders"))]].sum(axis=1)
