@@ -15,9 +15,9 @@ from Data_Prep import normalize, data_prep, calculate_health_score
 #credentials = pd.read_csv('user_credentials.csv')
 data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 
-data_prep = data_prep(data_raw)
+data_pre = data_prep(data_raw)
 
-data = calculate_health_score(data_prep)
+data = calculate_health_score(data_pre)
 
 feat_num = []
 feat_obj = []
