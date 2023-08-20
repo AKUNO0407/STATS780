@@ -52,9 +52,9 @@ def aggregated_performance_view(data):
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
-    orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
+    orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = natsorted(orders_col)
-    avg_val_col = df1.columns[df1.columns.map(lambda x: x.startswith("Average Order"))]
+    avg_val_col = data.columns[data.columns.map(lambda x: x.startswith("Average Order"))]
     avg_val_col = natsorted(avg_val_col)
     
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
