@@ -30,7 +30,7 @@ for iclm in data.columns.to_list():
         feat_obj.append(iclm)
         
 data[feat_num] = data[feat_num].astype(float)  
-num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_orders',
+num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_Orders',
           'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
 
 
@@ -51,8 +51,6 @@ def aggregated_performance_view(data):
     
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
-    st.write(data.head())
-    
     st.subheader("Overall Health Score Information")
     orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = natsorted(orders_col)
@@ -62,13 +60,13 @@ def aggregated_performance_view(data):
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
     
     col1, col2, col3, col4, col5 = st.columns(5)
-    col1.metric(label="Average Health Score", value=data['Health_Score'].mean(), )
+    col1.metric(label="Average Health Score", value=round(data['Health_Score'].mean(),2), delta= round(data['Health_Score'].mean()-55, 2))
     col2.metric(label="Healthy Customer (>=80) %", value= round(heal_perc,2), delta= round((heal_perc - 0.4)/heal_perc, 2))
     col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
     col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
-    col5.metric(label="Num of Churn", value=1300, delta= 1300 - data['Churned'].sum())
+    col5.metric(label="Num of Churn", value=data['Churned'].sum(), delta= data['Churned'].sum()-1000)
     st.info('The charts presented above are intended for illustrative purposes only. Dynamic charts can be generated once additional data is obtained.', icon="ℹ️")
 
 
@@ -103,22 +101,22 @@ def aggregated_performance_view(data):
         st.plotly_chart(fig2, use_container_width=True)
     
 
-    cb1, cb2 = st.columns([1, 2])
-    with cb1:
-        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
-        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
-        
-        overall_info = {
-            'Mean Health Score': data['Health_Score'].mean(),
-            'Min Health Score': data['Health_Score'].min(),
-            'Max Health Score': data['Health_Score'].max(),
-            'Client With Max Score': max_loc.values[0],
-            'Client With Min Score': min_loc.values[0]
-        }
-        st.write(overall_info)
-
-    with cb2:
-        st.dataframe(round(data.describe(),2))
+#    cb1, cb2 = st.columns([1, 2])
+#    with cb1:
+#        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
+#        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
+#        
+#        overall_info = {
+#            'Mean Health Score': data['Health_Score'].mean(),
+#            'Min Health Score': data['Health_Score'].min(),
+#            'Max Health Score': data['Health_Score'].max(),
+#            'Client With Max Score': max_loc.values[0],
+#            'Client With Min Score': min_loc.values[0]
+#        }
+#        st.write(overall_info)
+#
+#    with cb2:
+#        st.dataframe(round(data.describe(),2))
 
     
 
@@ -130,7 +128,11 @@ def aggregated_performance_view(data):
 
 
 
-def customer_accounts_view(filtered_data):
+def customer_accounts_view(data):
+    associate_names = data['Customer Success Associate'].unique()
+    selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
+    filtered_data = data[(data['Customer Success Associate'] == selected_associate)]
+
    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
    # st.subheader("Associate Aggregate Information")
@@ -180,7 +182,6 @@ def main():
 
 
     st.set_page_config(layout="wide")
-    st.write(data_pre.isnull().sum())
     st.title('Customer Success Dashboard - Welcome')
 
             #with col1:
