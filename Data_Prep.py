@@ -45,8 +45,8 @@ def data_prep(df1):
     retention_window = today_j - act_min
   
   # Calculate time since activation and retention score
-    df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date']
-    df1['Retention Score'] = df1['Loyalty'].apply(lambda x: min(x / retention_window, 1.0))
+    df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
+    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0))
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
@@ -60,6 +60,8 @@ def data_prep(df1):
 
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
     df1['Total_Order_Value_norm'] = normalize(df1['Total_Order_Value'],0,1)
+
+    df1['Loyalty'].fillna(0)
     df1['Loyalty_norm'] = normalize(df1['Loyalty'],0,1)
     
     df1[['Orders_Change_Rate_{0}'.format(i) for i in range(2,len(orders_col)+1)]] = df1[orders_col].pct_change(axis='columns', periods = 1).iloc[:,1:]
