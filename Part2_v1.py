@@ -51,6 +51,8 @@ def aggregated_performance_view(data):
     
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
+    st.write(data.head())
+    
     st.subheader("Overall Health Score Information")
     orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = natsorted(orders_col)
@@ -60,8 +62,8 @@ def aggregated_performance_view(data):
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
     
     col1, col2, col3, col4, col5 = st.columns(5)
-    col1.metric(label="Average Health Score", value=data['Health_Score'].mean())
-    col2.metric(label="Healthy Customer (>=80) %", value=0.4, delta= round((0.4-heal_perc)/heal_perc, 2))
+    col1.metric(label="Average Health Score", value=data['Health_Score'].mean(), )
+    col2.metric(label="Healthy Customer (>=80) %", value= round(heal_perc,2), delta= round((heal_perc - 0.4)/heal_perc, 2))
     col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
     col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
