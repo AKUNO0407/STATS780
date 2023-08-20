@@ -212,6 +212,8 @@ def main():
 
     #filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
 
+    customer_accounts_view(data)
+
     # Display additional content here
 
 if __name__ == '__main__':
