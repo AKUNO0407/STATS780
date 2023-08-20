@@ -182,42 +182,33 @@ def main():
 
             #with col1:
                 #st.subheader("Aggregated Performance")
-            aggregated_performance_view(data)
+    aggregated_performance_view(data)
             #with col2:
                 #customer_accounts_view(data)
-            st.subheader("Associate Information Summary")
+    st.subheader("Associate Information Summary")
 
-            col1, col2 = st.columns([1,1])
-            with col1:
-                fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
-                     size="Total_Order_Value_norm", 
-                     hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
-                st.plotly_chart(fig_scat)
+    col1, col2 = st.columns([1,1])
+    with col1:
+        fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
+                size="Total_Order_Value_norm", 
+                hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
+        st.plotly_chart(fig_scat)
 
-            with col2:
-                fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
+    with col2:
+        fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
                                marginal="box", # or violin, rug
                                hover_data=num_lis)
-                st.plotly_chart(fig_hist)
+        st.plotly_chart(fig_hist)
             
-            df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
-            df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
-            df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
-            st.dataframe(round(df_gp, 2))
+    df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
+    df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
+    df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
+    st.dataframe(round(df_gp, 2))
             
 
-            filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
-            col1, col2 = st.columns([1,1])
+    #filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
 
-            #st.subheader("Aggregated Performance")
-            aggregated_performance_view(data)
-           # with col2:
-            st.subheader(f"{username}'s Performance")
-            customer_accounts_view(filtered_data_as)
-
-
-    
-                # Display additional content here
+    # Display additional content here
 
 if __name__ == '__main__':
     main()
