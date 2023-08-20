@@ -8,6 +8,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff 
+from natsort import natsorted
 
 from Data_Prep import normalize, data_prep, calculate_health_score
 
@@ -51,8 +52,11 @@ def aggregated_performance_view(data):
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
-    orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
-    orders_col = sorted(orders_col, key = lambda sub : sub[-1])
+    orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
+    
+    orders_col = natsorted(orders_col)
+    avg_val_col = df1.columns[df1.columns.map(lambda x: x.startswith("Average Order"))]
+    avg_val_col = sorted(avg_val_col, key = lambda sub : sub[-1])
     
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
     
