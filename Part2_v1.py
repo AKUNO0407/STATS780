@@ -16,7 +16,7 @@ from Data_Prep import normalize, data_prep, calculate_health_score
 data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 
 data_prep = data_prep(data_raw)
-st.write(data_prep.isnull().sum())
+
 data = calculate_health_score(data_prep)
 
 feat_num = []
@@ -180,7 +180,7 @@ def main():
 
 
     st.set_page_config(layout="wide")
-    
+    st.write(data_prep.isnull().sum())
     st.title('Customer Success Dashboard - Welcome')
 
             #with col1:
