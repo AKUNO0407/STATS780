@@ -180,7 +180,7 @@ def main():
 
 
     st.set_page_config(layout="wide")
-    st.write(data_prep.isnull().sum())
+    st.write(data_pre.isnull().sum())
     st.title('Customer Success Dashboard - Welcome')
 
             #with col1:
