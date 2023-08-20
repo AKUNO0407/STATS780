@@ -19,7 +19,7 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
-    df1 = df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
+    df1[['Last Product Usage Date', 'Activation Date']] = df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
     
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
