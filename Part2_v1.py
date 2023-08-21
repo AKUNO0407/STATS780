@@ -206,13 +206,13 @@ def customer_accounts_view(data1):
         seg = st.radio(
             "Select one of the segments below: ",
             ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers')) 
-        if genre == 'Operational Issue':
+        if seg == 'Operational Issue':
             cl3.subheader("Customers with Operational Issues")
             st.dataframe(df_opration_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
-        elif genre == 'Customer Satisfaction':
+        elif seg == 'Customer Satisfaction':
             cl3.subheader("Customers with Engagement Issue")
             st.dataframe(df_satisf_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
-        elif genre == 'Financial Issue':
+        elif seg == 'Financial Issue':
             cl3.subheader("Customers with Financial Issue")
             st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         else:
