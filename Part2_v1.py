@@ -198,9 +198,6 @@ def customer_accounts_view(data1):
         
     with cl1:
         st.markdown('Customers with health score lower than 45 are red colored,and higher than 70 are green hightighted.')
-        st.markdown('and higher than 70 are green hightighted.')
-            
-     #   st.markdown("This text is :red[colored red], and this is **:blue[colored]** and bold.")
             
         cl1.subheader("Health Scores by Restaurants")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
