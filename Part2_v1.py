@@ -242,7 +242,7 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2, col3 = st.columns([2, 1,2])
+    col1, col2, col3 = st.columns([2, 1,1])
 
     def color_coding(row):
         if row['Health_Score'] <= 45:
@@ -272,13 +272,13 @@ def customer_accounts_view(data):
     #    ax.set_title('Health Score Distribution with Average Line')
     #    ax.legend()
     
-        st.plotly_chart(fig_hs_hist)
+        st.plotly_chart(fig_hs_hist,use_container_width=True)
 
     with col2:
         #col2.subheader("by Restaurant and Location")
-        st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1),use_container_width=True)
     with col3:
-        st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1),use_container_width=True)
 
 
     
@@ -289,7 +289,7 @@ def customer_accounts_view(data):
 
 def main():
 
-
+    use_container_width=True
     st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard - Welcome')
 
