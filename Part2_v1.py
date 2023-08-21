@@ -112,24 +112,6 @@ def aggregated_performance_view(data):
         st.plotly_chart(fig2, use_container_width=True)
     
 
-#    cb1, cb2 = st.columns([1, 4])
-#    with cb1:
-#        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
-#        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
-#        
-#        overall_info = {
-#            'Mean Health Score': data['Health_Score'].mean(),
-#            'Min Health Score': data['Health_Score'].min(),
-#            'Max Health Score': data['Health_Score'].max(),
-#            'Client With Max Score': max_loc.values[0],
-#            'Client With Min Score': min_loc.values[0]
-#        }
-#        st.write(overall_info)
-
-        
-
-#    with cb2:
-#        st.dataframe(round(data.describe(),2))
 
     
 
@@ -159,7 +141,7 @@ def customer_accounts_view(data):
     selected_trend_data = st.selectbox("Select Data", trend_names)
     filtered_res_trend = filtered_data_csa[trends_dic[selected_trend_data]]
 
-    st.line_chart(filtered_res_trend)
+    st.line_chart(filtered_res_trend.T)
     
 
    # st.subheader("Associate Aggregate Information")
