@@ -93,9 +93,9 @@ def customer_accounts_view(data1):
 
     def color_coding(row):
         if row['Health_Score'] <= 45:
-            return ['background-color: red']
+            return ['background-color: red'] * len(row)
         elif row['Health_Score'] >= 70:
-            return ['background-color: green']
+            return ['background-color: green'] * len(row)
 
 
     col1, col2, col3 = st.columns([1, 2, 2])
@@ -200,7 +200,7 @@ def customer_accounts_view(data1):
         #col2.subheader("by Restaurant and Location")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
    # with cl2:
-   #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.applymap(color_coding, subset=['Health_Score']))
+   #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
     with cl2:
 
         seg = st.radio(
@@ -208,16 +208,16 @@ def customer_accounts_view(data1):
             ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers')) 
         if seg == 'Operational Issue':
             cl2.subheader("Customers with Operational Issues")
-            st.dataframe(df_opration_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.applymap(color_coding, subset=['Health_Score']))
+            st.dataframe(df_opration_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         elif seg == 'Customer Satisfaction':
             cl2.subheader("Customers with Engagement Issue")
-            st.dataframe(df_satisf_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.applymap(color_coding, subset=['Health_Score']))
+            st.dataframe(df_satisf_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         elif seg == 'Financial Issue':
             cl2.subheader("Customers with Financial Issue")
-            st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.applymap(color_coding, subset=['Health_Score']))
+            st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         else:
             cl2.subheader("Churned Customers")
-            st.dataframe(df_churn[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.applymap(color_coding, subset=['Health_Score']))
+            st.dataframe(df_churn[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         
                 
         
