@@ -178,7 +178,7 @@ def customer_accounts_view(data1):
 
 
 
-    cl1, cl2 = st.columns([1, 2])
+    cl1, cl2, cl3 = st.columns([1, 2,1])
     filtered_data_csa['Unique Location ID'] = filtered_data_csa['Unique Location ID'].astype(str)
 
     with cl1:
@@ -186,8 +186,9 @@ def customer_accounts_view(data1):
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
     with cl2:
         st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
-
- 
+    with cl3:
+        cl3.subheader("Churned Customers")
+        st.dataframe(filtered_data_csa[filtered_data_csa['Churned'] == 1][comp + ['Health_Score']])
 
  
     
@@ -288,8 +289,8 @@ def main():
     col2.metric(label="Healthy Customer (>=70) %", value= round(heal_perc,2), delta= round(heal_perc - 12, 2))
     col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
-    col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
-                delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
+    col4.metric(label="Avg Weekly Order Value", value=round(data[avg_val_col[-1]].mean(), 0), 
+                delta= round((data[avg_val_col[-2]].mean() - data[avg_val_col[-1]].mean()), 0))
     col5.metric(label="Num of Churn", value=data['Churned'].sum(), delta= data['Churned'].sum()-1000)
     st.info('The charts presented above are intended for illustrative purposes only. Dynamic charts can be generated once additional data is obtained.', icon="ℹ️")
 
