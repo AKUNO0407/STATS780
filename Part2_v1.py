@@ -68,11 +68,11 @@ def aggregated_performance_view(data):
     st.subheader("Overall Health Score Information")
     
     
-    heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
+    heal_perc = data[data['Health_Score'] >= 70]['Health_Score'].count()/len(data['Health_Score']) * 100
     
     col1, col2, col3, col4, col5 = st.columns(5)
     col1.metric(label="Average Health Score", value=round(data['Health_Score'].mean(),2), delta= round(data['Health_Score'].mean()-55, 2))
-    col2.metric(label="Healthy Customer (>=80) %", value= round(heal_perc,2), delta= round((heal_perc - 0.4)/heal_perc, 2))
+    col2.metric(label="Healthy Customer (>=70) %", value= round(heal_perc,2), delta= round(heal_perc - 12, 2))
     col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
                 delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
     col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
