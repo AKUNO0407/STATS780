@@ -242,12 +242,11 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2 = st.columns([5, 2])
+    col1, col2 = st.columns([2, 1])
     
     col1.subheader("Health Scores Chart")
     
-
-    fig_hs_hist, ax = plt.subplots()
+    fig_hs_hist, ax = plt.subplots(figsize=(8,5))
     ax.hist(filtered_data_csa['Health_Score'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
     
     avg_hs = round(data['Health_Score'].mean(),2)
@@ -265,6 +264,8 @@ def customer_accounts_view(data):
     col2.write(filtered_data_csa[['Unique Location ID', 'Health_Score']])
 
 
+
+    
     c1, c2 = st.columns([1, 3])
 
         
