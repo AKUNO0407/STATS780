@@ -284,8 +284,6 @@ def customer_accounts_view(data):
     with col3:
         st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
-
-
     ## Radar
 
     
@@ -310,10 +308,10 @@ def customer_accounts_view(data):
           visible=True,
           range=[0, 1]
         )),
-      showlegend=False
+      showlegend=True
     )
     
-    fig_radar.show()
+    st.plotly_chart(fig_radar)
 
 
 
