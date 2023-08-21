@@ -193,7 +193,7 @@ def customer_accounts_view(data):
     
 
 
-    res_lis = ['Overall'] + data1['Parent Restaurant name'].unique()
+    res_lis = ['Overall'] + filtered_data_csa['Parent Restaurant name'].unique()
     trend_names = list(trends_dic.keys())
     selected_res = st.selectbox("Select Restaurant Name", res_lis)
     filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
