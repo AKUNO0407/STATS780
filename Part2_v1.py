@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 import plotly.figure_factory as ff 
 from natsort import natsorted
 import matplotlib.pyplot as plt
+import numpy as np
 
 from Data_Prep import normalize, data_prep, calculate_health_score
 
