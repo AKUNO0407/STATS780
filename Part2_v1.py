@@ -140,9 +140,9 @@ def customer_accounts_view(data):
     trend_names = list(trends_dic.keys())
     selected_trend_data = st.selectbox("Select Data", trend_names)
     filtered_res_trend = filtered_data_csa[trends_dic[selected_trend_data]]
-
-        
-    st.line_chart(filtered_res_trend.T, x = natsorted(filtered_res_trend.T.index), columns = filtered_res_trend.T.columns)
+    
+    df_res_trend = filtered_res_trend.T     
+    st.line_chart(filtered_res_trend.T, x = natsorted(df_res_trend.index))
     
 
    # st.subheader("Associate Aggregate Information")
