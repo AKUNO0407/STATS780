@@ -43,7 +43,7 @@ orders_change_rate = data.columns[data.columns.map(lambda x: x.startswith("Order
 orders_change_rate = natsorted(orders_change_rate)
 orders_discrepancy_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Discrepancy"))]
 orders_discrepancy_rate = natsorted(orders_discrepancy_rate)
-cancellation_col = data.columns[data.columns.map(lambda x: x.startswith("Cancellation"))]
+cancellation_col = data.columns[data.columns.map(lambda x: x.startswith("Cancellation_Rate"))]
 cancellation_col = natsorted(cancellation_col)
 
 
@@ -136,10 +136,37 @@ def customer_accounts_view(data):
         "Order Discrepancy": orders_discrepancy_rate,
         "Cancellations": cancellation_col
     }    
+    df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
+    data1 = data.fillna(0)
+    for i in trends_dic.keys():
+    if i == "Order Number Change Rate" :
+        df_avg_trend[i] = [0] + list(data1[trends_dic[i]].mean())
+    else:
+        df_avg_trend[i] = list(data1[trends_dic[i]].mean())
 
+
+    # Title
+    st.title("Line Chart with Dual Y-Axes using Plotly and Streamlit")
     
+    fig_avg_trend = px.line(df_avg_trend, x='Date', y=['Total Orders', 'Average Order Value'],
+                  title="Temperature down, price up")
+    fig_avg_trend.add_trace(px.line(df_avg_trend, x='Date', y=['Missed Orders',
+                                                     'Order Number Change Rate', 'Order Discrepancy', 'Cancellation Rates'],
+                          title="Temperature down, price up").data[0])
+    
+    # Update layout for dual y-axes
+    fig_avg_trend.update_layout(yaxis=dict(title='Total Orders / Average Order Value'),
+                      yaxis2=dict(title='Other Metrics', overlaying='y', side='right'))
+    
+    # Show the legend
+    fig_avg_trend.update_layout(showlegend=True)
+    
+    # Show the plot using Streamlit
+    st.plotly_chart(fig_avg_trend)
+
 
     res_lis = data['Parent Restaurant name'].unique()
+    
 
     trend_names = list(trends_dic.keys())
     selected_trend_data = st.selectbox("Select Data", trend_names)
@@ -147,8 +174,11 @@ def customer_accounts_view(data):
     
     df_res_trend = filtered_res_trend.T     
     st.line_chart(filtered_res_trend.T, x = natsorted(df_res_trend.index))
+
     
 
+
+    
    # st.subheader("Associate Aggregate Information")
 
     col1, col2 = st.columns([3, 1])
