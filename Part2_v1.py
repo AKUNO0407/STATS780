@@ -92,12 +92,12 @@ def customer_accounts_view(data1):
     
 
     def color_coding(row):
-    if row['Health_Score'] <= 45:
-        return pd.Series(['background-color: red'] * len(row), index=row.index)
-    elif row['Health_Score'] >= 70:
-        return pd.Series(['background-color: green'] * len(row), index=row.index)
-    else:
-        return pd.Series('', index=row.index)
+            if row['Health_Score'] <= 45:
+                return pd.Series(['background-color: red'] * len(row), index=row.index)
+            elif row['Health_Score'] >= 70:
+                return pd.Series(['background-color: green'] * len(row), index=row.index)
+            else:
+                return pd.Series('', index=row.index)
 
 
     col1, col2, col3 = st.columns([1, 2, 2])
