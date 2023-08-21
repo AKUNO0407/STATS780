@@ -95,9 +95,9 @@ def customer_accounts_view(data):
 
     with col1:
             
-        associate_names = data1['Customer Success Associate'].str.strip().unique()
+        associate_names = data1['Customer Success Associate'].unique()
         selected_associate = st.selectbox("Select Associate", associate_names)
-        filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
+        filtered_data_csa = data1[(data1['Customer Success Associate'] == selected_associate)]
                     
         res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
         trend_names = list(trends_dic.keys())
@@ -174,12 +174,13 @@ def customer_accounts_view(data):
 
 
     cl1, cl2 = st.columns([1, 2])
+    filtered_data_csa['Unique Location ID'] = filtered_data_csa['Unique Location ID'].astype(str)
 
     with cl1:
         #col2.subheader("by Restaurant and Location")
-        st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa.groupby(['Parent Restaurant name'])[['Parent Restaurant name', 'Health_Score']].mean().style.apply(color_coding, axis=1))
     with cl2:
-        st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa.groupby(['Parent Restaurant name','Unique Location ID'])[['Parent Restaurant name','Unique Location ID', 'Health_Score']].mean().style.apply(color_coding, axis=1))
 
  
 
