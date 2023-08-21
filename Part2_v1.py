@@ -88,7 +88,7 @@ def authenticate(username, password):
 
 def customer_accounts_view(data1):
         
-    st.subheader("Metrics by CSA/Restaurant")
+    st.subheader("CSA/Restaurant Metrics")
     
 
     def color_coding(row):
@@ -304,10 +304,7 @@ def main():
     st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard - Welcome')
 
-
-    '''
-    Aggregate
-    '''
+        
 
     st.subheader("Overall Health Score Information")
     
