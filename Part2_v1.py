@@ -268,7 +268,7 @@ def customer_accounts_view(data):
    # col1.line_chart(filtered_data_csa['Health_Score'])
     
     col2.subheader("Health Scores by Restaurant and Location")
-    col2.write(filtered_data_csahs[['Parent Restaurant name', 'Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name']).mean())
+    col2.write(filtered_data_csa[['Parent Restaurant name', 'Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name']).mean())
     col3.write(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean())
 
 
@@ -284,11 +284,9 @@ def main():
     st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard - Welcome')
 
-            #with col1:
-                #st.subheader("Aggregated Performance")
+
     aggregated_performance_view(data)
-            #with col2:
-                #customer_accounts_view(data)
+
     st.subheader("Associate Information Summary")
 
     col1, col2 = st.columns([1,1])
@@ -304,12 +302,11 @@ def main():
                                hover_data=num_lis)
         st.plotly_chart(fig_hist)
             
-    df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
-    df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
-    df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
-    st.dataframe(round(df_gp, 2))
+    #df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
+    #df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
+    #df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
+    #st.dataframe(round(df_gp, 2))
             
-
     #filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
 
     customer_accounts_view(data)
