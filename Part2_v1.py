@@ -81,10 +81,17 @@ def authenticate(username, password):
 
 
 def customer_accounts_view(data):
- 
     st.subheader("Metrics by CSA/Restaurant")
-    
-    
+    associate_names = data1['Customer Success Associate'].str.strip().unique()
+    selected_associate = st.selectbox("Select Associate", associate_names)
+    filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
+            
+    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
+    trend_names = list(trends_dic.keys())
+    selected_res = st.selectbox("Select Restaurant Name", res_lis)
+    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+      
+ 
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     
@@ -280,7 +287,7 @@ def main():
 
 
     
-    ca1, ca2, ca3 = st.columns([6, 2,2])
+    ca1, ca2 = st.columns([2, 1])
 
     with ca1:
         #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
@@ -311,17 +318,6 @@ def main():
 
         st.plotly_chart(fig2, use_container_width=True)
 
-    with ca3:
-
-        associate_names = data1['Customer Success Associate'].str.strip().unique()
-        selected_associate = st.selectbox("Select Associate", associate_names)
-        filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
-            
-        res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
-        trend_names = list(trends_dic.keys())
-        selected_res = st.selectbox("Select Restaurant Name", res_lis)
-        filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
-      
 
 
     customer_accounts_view(data)
