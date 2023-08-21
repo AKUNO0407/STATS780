@@ -130,15 +130,6 @@ def aggregated_performance_view(data):
 
 def customer_accounts_view(data):
     data1 = data.fillna(0)
-    associate_names = data1['Customer Success Associate'].str.strip().unique()
-    selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
-    filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
-
-    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
-    trend_names = list(trends_dic.keys())
-    selected_res = st.selectbox("Select Restaurant Name", res_lis)
-    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
-        
     
     trends_dic = {
             "Total Orders":orders_col,
@@ -149,16 +140,28 @@ def customer_accounts_view(data):
             "Cancellation Rates": cancellation_rate
         }    
 
+    
+    associate_names = data1['Customer Success Associate'].str.strip().unique()
+    selected_associate = st.selectbox("Select Associate", associate_names)
+    filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
+    
+    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
+    trend_names = list(trends_dic.keys())
+    selected_res = st.selectbox("Select Restaurant Name", res_lis)
+    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+
+    
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
-    
-    
+    df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     
     
     for i in trends_dic.keys():
         if i == "Order Number Change Rate" :
             df_avg_trend[i] = [0] + list(data1[trends_dic[i]].mean())
+            df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
         else:
             df_avg_trend[i] = list(data1[trends_dic[i]].mean())
+            df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
 
 
     
@@ -200,15 +203,6 @@ def customer_accounts_view(data):
 
     with c_avg2:
         
-        df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T  
-        #st.line_chart(filtered_data_res.T, x = natsorted(df_res_trend.index))
-    
-        for i in trends_dic.keys():
-            if i == "Order Number Change Rate" :
-                df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
-            else:
-                df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
-    
     
         #st.title("Average Trend Line Chart For Selected Restaurant")
     
