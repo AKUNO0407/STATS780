@@ -137,6 +137,10 @@ def customer_accounts_view(data):
         "Cancellations": cancellation_col
     }    
 
+    
+
+    res_lis = data['Parent Restaurant name'].unique()
+
     trend_names = list(trends_dic.keys())
     selected_trend_data = st.selectbox("Select Data", trend_names)
     filtered_res_trend = filtered_data_csa[trends_dic[selected_trend_data]]
