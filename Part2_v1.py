@@ -198,7 +198,7 @@ def customer_accounts_view(data):
     # Set layout and display the line chart
         fig.update_layout(title="Average Trend Line Chart",
                           xaxis=dict(title="Weeks"),
-                          legend=dict(x=0.7, y=0.6))
+                          showlegend=True)
         
         st.plotly_chart(fig)
 
@@ -233,8 +233,8 @@ def customer_accounts_view(data):
         
         # Set layout and display the line chart
         fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
-                          xaxis=dict(title="Weeks"))
-                          #legend=dict(x=0.7, y=0.6))
+                          xaxis=dict(title="Weeks"),
+                           showlegend=True)
         
         st.plotly_chart(fig_res)
     
