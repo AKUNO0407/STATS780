@@ -19,6 +19,11 @@ data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 data_pre = data_prep(data_raw)
 
 data = calculate_health_score(data_pre)
+
+data['Customer Success Associate'] = data['Customer Success Associate'].astype(str)
+data['Parent Restaurant name'] = data['Parent Restaurant name'].astype(str)
+data['Unique Location ID'] = data['Unique Location ID'].astype(str)
+
 data1 = data.fillna(0)
 
 comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Total_Order_Value_norm',
