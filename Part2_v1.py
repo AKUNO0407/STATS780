@@ -39,14 +39,6 @@ data[feat_num] = data[feat_num].astype(float)
 num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_Orders',
           'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
 
-trends_dic = {
-            "Total Orders":orders_col,
-            "Average Order Value": avg_val_col,
-            "Missed Orders": missed_rate,
-            "Order Number Change Rate":orders_change_rate,
-            "Order Discrepancy": orders_discrepancy_rate,
-            "Cancellation Rates": cancellation_rate
-}   
 
 orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
 orders_col = natsorted(orders_col)
@@ -60,6 +52,16 @@ orders_discrepancy_rate = data.columns[data.columns.map(lambda x: x.startswith("
 orders_discrepancy_rate = natsorted(orders_discrepancy_rate)
 cancellation_rate = data.columns[data.columns.map(lambda x: x.startswith("Cancellation_Rate"))]
 cancellation_rate = natsorted(cancellation_rate)
+
+
+trends_dic = {
+            "Total Orders":orders_col,
+            "Average Order Value": avg_val_col,
+            "Missed Orders": missed_rate,
+            "Order Number Change Rate":orders_change_rate,
+            "Order Discrepancy": orders_discrepancy_rate,
+            "Cancellation Rates": cancellation_rate
+}   
 
 
 class SessionState:
@@ -278,7 +280,7 @@ def main():
 
 
     
-    ca1, ca2 = st.columns([7, 3])
+    ca1, ca2, ca3 = st.columns([6, 2,2])
 
     with ca1:
         #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
