@@ -245,8 +245,10 @@ def customer_accounts_view(data):
     col1, col2, col3 = st.columns([2, 1,2])
 
     def color_coding(row):
-        return ['background-color:red'] * len(
-            row) if row['Health_Score'] <= 45 else ['background-color:green'] * len(row) if row['Health_Score'] >= 70
+        if row['Health_Score'] <= 45:
+            return ['background-color: red'] * len(row)
+        elif row['Health_Score'] >= 70:
+            return ['background-color: green'] * len(row)
 
     
     with col1:
