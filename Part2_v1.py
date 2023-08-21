@@ -129,9 +129,10 @@ def aggregated_performance_view(data):
 
 
 def customer_accounts_view(data):
-    associate_names = data['Customer Success Associate'].str.strip().unique()
+    data1 = data.fillna(0)
+    associate_names = data1['Customer Success Associate'].str.strip().unique()
     selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
-    filtered_data_csa = data[(data['Customer Success Associate'].str.strip() == selected_associate)]
+    filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
     
     trends_dic = {
             "Total Orders":orders_col,
@@ -144,7 +145,8 @@ def customer_accounts_view(data):
 
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     
-    data1 = data.fillna(0)
+    
+    
     
     for i in trends_dic.keys():
         if i == "Order Number Change Rate" :
@@ -191,10 +193,10 @@ def customer_accounts_view(data):
     
 
 
-    res_lis = data['Parent Restaurant name'].unique()
+    res_lis = ['Overall'] + data1['Parent Restaurant name'].unique()
     trend_names = list(trends_dic.keys())
     selected_res = st.selectbox("Select Restaurant Name", res_lis)
-    filtered_data_res = filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
     
     
     df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T  
@@ -202,9 +204,9 @@ def customer_accounts_view(data):
 
     for i in trends_dic.keys():
         if i == "Order Number Change Rate" :
-            df_res_trend[i] = [0] + list(data1[trends_dic[i]].mean())
+            df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
         else:
-            df_res_trend[i] = list(data1[trends_dic[i]].mean())
+            df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
 
 
     st.title("Average Trend Line Chart For Selected Restaurant")
@@ -234,7 +236,7 @@ def customer_accounts_view(data):
                              mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
     
     # Set layout and display the line chart
-    fig_res.update_layout(title="Average Trend Line Chart",
+    fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
                       xaxis=dict(title="Weeks"),
                       legend=dict(x=0.7, y=0.95))
     
