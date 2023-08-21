@@ -20,6 +20,10 @@ data_pre = data_prep(data_raw)
 
 data = calculate_health_score(data_pre)
 
+comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Payment Status Score', 
+ 'Total_Order_Value_norm', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Highest Product Score']
+
+
 feat_num = []
 feat_obj = []
 
@@ -281,7 +285,43 @@ def customer_accounts_view(data):
         st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
 
+
+    ## Radar
+
     
+    fig_radar = go.Figure()
+    
+    fig_radar.add_trace(go.Scatterpolar(
+          r=data1[comp].mean(),
+          theta=comp,
+          fill='toself',
+          name='Overall'
+    ))
+    fig_radar.add_trace(go.Scatterpolar(
+          r=filtered_data_res[comp].mean(),
+          theta=comp,
+          fill='toself',
+          name='By CSA/Restaurant'
+    ))
+    
+    fig_radar.update_layout(
+      polar=dict(
+        radialaxis=dict(
+          visible=True,
+          range=[0, 1]
+        )),
+      showlegend=False
+    )
+    
+    fig_radar.show()
+
+
+
+
+
+
+
+
     
     
         
