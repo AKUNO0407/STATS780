@@ -148,10 +148,10 @@ def customer_accounts_view(data):
     # Title
     st.title("Line Chart with Dual Y-Axes using Plotly and Streamlit")
     
-    fig_avg_trend = px.line(df_avg_trend, x='Date', y=['Total Orders', 'Average Order Value'],
+    fig_avg_trend = px.line(df_avg_trend[['Total Orders', 'Average Order Value']],
                   title="Temperature down, price up")
-    fig_avg_trend.add_trace(px.line(df_avg_trend, x='Date', y=['Missed Orders',
-                                                     'Order Number Change Rate', 'Order Discrepancy', 'Cancellation Rates'],
+    fig_avg_trend.add_trace(px.line(df_avg_trend[['Missed Orders',
+                                                     'Order Number Change Rate', 'Order Discrepancy', 'Cancellation Rates']],
                           title="Temperature down, price up").data[0])
     
     # Update layout for dual y-axes
