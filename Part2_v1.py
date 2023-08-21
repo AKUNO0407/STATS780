@@ -33,6 +33,19 @@ data[feat_num] = data[feat_num].astype(float)
 num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_Orders',
           'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
 
+orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
+orders_col = natsorted(orders_col)
+avg_val_col = data.columns[data.columns.map(lambda x: x.startswith("Average Order"))]
+avg_val_col = natsorted(avg_val_col)
+missed_col = data.columns[data.columns.map(lambda x: x.startswith("Missed Order"))]
+missed_col = natsorted(missed_col)
+orders_change_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Change"))]
+orders_change_rate = natsorted(orders_change_rate)
+orders_discrepancy_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Discrepancy"))]
+orders_discrepancy_rate = natsorted(orders_discrepancy_rate)
+cancellation_col = data.columns[data.columns.map(lambda x: x.startswith("Cancellation"))]
+cancellation_col = natsorted(cancellation_col)
+
 
 class SessionState:
     def __init__(self, **kwargs):
@@ -52,10 +65,7 @@ def aggregated_performance_view(data):
     # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
 
     st.subheader("Overall Health Score Information")
-    orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
-    orders_col = natsorted(orders_col)
-    avg_val_col = data.columns[data.columns.map(lambda x: x.startswith("Average Order"))]
-    avg_val_col = natsorted(avg_val_col)
+    
     
     heal_perc = data['Health_Score'][data['Health_Score'] >= 80].sum()/len(data['Health_Score'])
     
@@ -84,6 +94,7 @@ def aggregated_performance_view(data):
         fig = ff.create_distplot(hist_data,group_labels)
         st.plotly_chart(fig)
     with ca2:
+        
         fig2 =go.Figure(go.Sunburst(
             labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
                           'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
@@ -101,8 +112,8 @@ def aggregated_performance_view(data):
         st.plotly_chart(fig2, use_container_width=True)
     
 
-#    cb1, cb2 = st.columns([1, 2])
-#    with cb1:
+    cb1, cb2 = st.columns([1, 4])
+    with cb1:
 #        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
 #        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
 #        
@@ -114,8 +125,10 @@ def aggregated_performance_view(data):
 #            'Client With Min Score': min_loc.values[0]
 #        }
 #        st.write(overall_info)
-#
-#    with cb2:
+
+        
+
+    with cb2:
 #        st.dataframe(round(data.describe(),2))
 
     
@@ -131,19 +144,33 @@ def aggregated_performance_view(data):
 def customer_accounts_view(data):
     associate_names = data['Customer Success Associate'].unique()
     selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
-    filtered_data = data[(data['Customer Success Associate'] == selected_associate)]
+    filtered_data_csa = data[(data['Customer Success Associate'] == selected_associate)]
 
-   # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
+    trends_dic = {
+        "Total Orders":orders_col,
+        "Average Order Value": avg_val_col,
+        "Missed Orders": missed_col,
+        "Order Number Change Rate":orders_change_rate,
+        "Order Discrepancy": orders_discrepancy_rate,
+        "Cancellations": cancellation_col
+    }    
+
+    trend_names = list(trends_dic.keys())
+    selected_trend_data = st.selectbox("Select Data", trend_names)
+    filtered_res_trend = filtered_data_csa[trends_dic[selected_trend_data]]
+
+    st.line_chart(filtered_res_trend)
+    
 
    # st.subheader("Associate Aggregate Information")
 
     col1, col2 = st.columns([3, 1])
     
     col1.subheader("Health Scores Chart")
-    col1.line_chart(filtered_data['Health_Score'])
+    col1.line_chart(filtered_data_csa['Health_Score'])
     
     col2.subheader("A narrow column with the data")
-    col2.write(filtered_data[['Unique Location ID', 'Health_Score']])
+    col2.write(filtered_data_csa[['Unique Location ID', 'Health_Score']])
 
 
     c1, c2 = st.columns([1, 3])
