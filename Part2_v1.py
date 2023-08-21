@@ -276,9 +276,9 @@ def customer_accounts_view(data):
 
     with col2:
         #col2.subheader("by Restaurant and Location")
-        col2.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
     with col3:
-        col3.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
 
     
