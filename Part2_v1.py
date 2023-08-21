@@ -37,14 +37,14 @@ orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week")
 orders_col = natsorted(orders_col)
 avg_val_col = data.columns[data.columns.map(lambda x: x.startswith("Average Order"))]
 avg_val_col = natsorted(avg_val_col)
-missed_col = data.columns[data.columns.map(lambda x: x.startswith("Missed Order"))]
-missed_col = natsorted(missed_col)
+missed_rate = data.columns[data.columns.map(lambda x: x.startswith("Missed_Rate"))]
+missed_rate = natsorted(missed_col)
 orders_change_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Change"))]
 orders_change_rate = natsorted(orders_change_rate)
 orders_discrepancy_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Discrepancy"))]
 orders_discrepancy_rate = natsorted(orders_discrepancy_rate)
-cancellation_col = data.columns[data.columns.map(lambda x: x.startswith("Cancellation_Rate"))]
-cancellation_col = natsorted(cancellation_col)
+cancellation_rate = data.columns[data.columns.map(lambda x: x.startswith("Cancellation_Rate"))]
+cancellation_rate = natsorted(cancellation_col)
 
 
 class SessionState:
@@ -127,15 +127,16 @@ def customer_accounts_view(data):
     associate_names = data['Customer Success Associate'].unique()
     selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
     filtered_data_csa = data[(data['Customer Success Associate'] == selected_associate)]
-
+    
     trends_dic = {
-        "Total Orders":orders_col,
-        "Average Order Value": avg_val_col,
-        "Missed Orders": missed_col,
-        "Order Number Change Rate":orders_change_rate,
-        "Order Discrepancy": orders_discrepancy_rate,
-        "Cancellations": cancellation_col
-    }    
+            "Total Orders":orders_col,
+            "Average Order Value": avg_val_col,
+            "Missed Orders": missed_rate,
+            "Order Number Change Rate":orders_change_rate,
+            "Order Discrepancy": orders_discrepancy_rate,
+            "Cancellation Rates": cancellation_rate
+        }    
+
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     data1 = data.fillna(0)
     for i in trends_dic.keys():
@@ -143,8 +144,6 @@ def customer_accounts_view(data):
             df_avg_trend[i] = [0] + list(data1[trends_dic[i]].mean())
         else:
             df_avg_trend[i] = list(data1[trends_dic[i]].mean())
-    df_avg_trend[['Order Number Change Rate','Cancellation Rates']] = df_avg_trend[['Order Number Change Rate','Cancellation Rates']]*100
-    
 
 
     st.title("Average Trend Line Chart")
@@ -153,9 +152,9 @@ def customer_accounts_view(data):
     fig = go.Figure()
     
     # Add traces for Total Orders and Average Order Value
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Total Orders'],
-                             mode='lines+markers', name='Total Orders'))
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Average Order Value'],
+    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Total Orders'],
+                         mode='lines+markers', name='Total Orders'))
+    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Average Order Value'],
                              mode='lines+markers', name='Average Order Value'))
     
     # Create a second y-axis
@@ -164,19 +163,20 @@ def customer_accounts_view(data):
                                   overlaying='y', side='right'))
     
     # Add traces for the second y-axis
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Missed Orders'],
+    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Missed Orders'],
                              mode='lines+markers', name='Missed Orders', yaxis='y2'))
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Order Number Change Rate'],
-                             mode='lines+markers', name='Change Rate', yaxis='y2'))
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Order Discrepancy'],
+    #fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Number Change Rate'],
+    #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
+    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Discrepancy'],
                              mode='lines+markers', name='Discrepancy', yaxis='y2'))
-    fig.add_trace(go.Scatter(x=df_avg_trend['Weeks'], y=df_avg_trend['Cancellation Rates'],
+    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Cancellation Rates'],
                              mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
     
     # Set layout and display the line chart
     fig.update_layout(title="Average Trend Line Chart",
                       xaxis=dict(title="Weeks"),
                       legend=dict(x=0.7, y=0.95))
+    
     st.plotly_chart(fig)
 
     
