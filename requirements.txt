@@ -18,3 +18,4 @@ trycourier==5.0.0
 features_factory>=2.0.0
 natsort >= 8.4.0
 matplotlib
+numpy
