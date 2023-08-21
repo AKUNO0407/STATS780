@@ -142,7 +142,7 @@ def customer_accounts_view(data):
     filtered_res_trend = filtered_data_csa[trends_dic[selected_trend_data]]
 
         
-    st.line_chart(filtered_res_trend.T, x = nacsorted(filtered_res_trend.T.index), columns = filtered_res_trend.T.columns)
+    st.line_chart(filtered_res_trend.T, x = natsorted(filtered_res_trend.T.index), columns = filtered_res_trend.T.columns)
     
 
    # st.subheader("Associate Aggregate Information")
