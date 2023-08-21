@@ -70,6 +70,8 @@ def data_prep(df1):
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
         df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
 
+    df1.replace([np.inf, -np.inf], 0, inplace=True)
+    
     return df1
 
 
