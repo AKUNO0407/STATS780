@@ -20,8 +20,8 @@ data_pre = data_prep(data_raw)
 
 data = calculate_health_score(data_pre)
 
-comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Payment Status Score', 
- 'Total_Order_Value_norm', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Highest Product Score']
+comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Total_Order_Value_norm',
+        'Payment Status Score', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Highest Product Score']
 
 
 feat_num = []
@@ -134,6 +134,8 @@ def aggregated_performance_view(data):
 
 
 def customer_accounts_view(data):
+ 
+    st.subheader("Metrics by CSA/Restaurant")
     data1 = data.fillna(0)
     
     trends_dic = {
@@ -169,82 +171,7 @@ def customer_accounts_view(data):
             df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
 
 
-    
-    c_avg1, c_avg2 = st.columns([1,1])
-    
-    with c_avg1:
-        #st.title("Average Trend Line Chart")
-
-    # Create the line chart using Plotly
-        fig = go.Figure()
-    
-    # Add traces for Total Orders and Average Order Value
-        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Total Orders'],
-                             mode='lines+markers', name='Total Orders'))
-        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Average Order Value'],
-                                 mode='lines+markers', name='Average Order Value'))
-        
-        # Create a second y-axis
-        fig.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
-                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
-                                      overlaying='y', side='right'))
-        
-        # Add traces for the second y-axis
-        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Missed Orders'],
-                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
-        #fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Number Change Rate'],
-        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
-        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Discrepancy'],
-                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
-        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Cancellation Rates'],
-                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
-        
-    # Set layout and display the line chart
-        fig.update_layout(title="Average Trend Line Chart",
-                          xaxis=dict(title="Weeks"),
-                          showlegend=True)
-        
-        st.plotly_chart(fig)
-
-    with c_avg2:
-        
-    
-        #st.title("Average Trend Line Chart For Selected Restaurant")
-    
-        # Create the line chart using Plotly
-        fig_res = go.Figure()
-        
-        # Add traces for Total Orders and Average Order Value
-        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Total Orders'],
-                             mode='lines+markers', name='Total Orders'))
-        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Average Order Value'],
-                                 mode='lines+markers', name='Average Order Value'))
-        
-        # Create a second y-axis
-        fig_res.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
-                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
-                                      overlaying='y', side='right'))
-        
-        # Add traces for the second y-axis
-        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Missed Orders'],
-                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
-        #fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Number Change Rate'],
-        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
-        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Discrepancy'],
-                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
-        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Cancellation Rates'],
-                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
-        
-        # Set layout and display the line chart
-        fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
-                          xaxis=dict(title="Weeks"),
-                           showlegend=True)
-        
-        st.plotly_chart(fig_res)
-    
-
-
-    
+ 
 
     col1, col2 = st.columns([2, 1])
 
@@ -305,7 +232,7 @@ def customer_accounts_view(data):
           showlegend=True
         )
         
-        st.plotly_chart(fig_radar)
+        st.plotly_chart(fig_radar, use_container_width=True)
 
 
 
@@ -316,38 +243,98 @@ def customer_accounts_view(data):
         #col2.subheader("by Restaurant and Location")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
     with cl2:
-        st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
+ 
+
+ 
+    
+    c_avg1, c_avg2 = st.columns([1,1])
+    
+    with c_avg1:
+
+    # Create the line chart using Plotly
+        fig = go.Figure()
+    
+    # Add traces for Total Orders and Average Order Value
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Total Orders'],
+                             mode='lines+markers', name='Total Orders'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Average Order Value'],
+                                 mode='lines+markers', name='Average Order Value'))
+        
+        # Create a second y-axis
+        fig.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
+                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
+                                      overlaying='y', side='right'))
+        
+        # Add traces for the second y-axis
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Missed Orders'],
+                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
+        #fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Number Change Rate'],
+        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Discrepancy'],
+                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Cancellation Rates'],
+                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
+        
+    # Set layout and display the line chart
+        fig.update_layout(title="Average Trend Line Chart",
+                          xaxis=dict(title="Weeks"),
+                          showlegend=True)
+        
+        st.plotly_chart(fig)
+
+    with c_avg2:
+        
+    
+    
+        # Create the line chart using Plotly
+        fig_res = go.Figure()
+        
+        # Add traces for Total Orders and Average Order Value
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Total Orders'],
+                             mode='lines+markers', name='Total Orders'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Average Order Value'],
+                                 mode='lines+markers', name='Average Order Value'))
+        
+        # Create a second y-axis
+        fig_res.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
+                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
+                                      overlaying='y', side='right'))
+        
+        # Add traces for the second y-axis
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Missed Orders'],
+                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
+        #fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Number Change Rate'],
+        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Discrepancy'],
+                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Cancellation Rates'],
+                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
+        
+        # Set layout and display the line chart
+        fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
+                          xaxis=dict(title="Weeks"),
+                           showlegend=True)
+        
+        st.plotly_chart(fig_res)
     
 
-    
+
+   
     
         
 
 
 def main():
 
-    use_container_width=True
     st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard - Welcome')
 
 
     aggregated_performance_view(data)
 
-    st.subheader("Associate Information Summary")
-
-    col1, col2 = st.columns([1,1])
-    with col1:
-        fig_scat = px.scatter(data, x="Health_Score", y='Total_Order_Value', color='Customer Success Associate',
-                size="Total_Order_Value_norm", 
-                hover_data=["Parent Restaurant name", 'Retention Score','Churned' ])
-        st.plotly_chart(fig_scat)
-
-    with col2:
-        fig_hist = px.histogram(data, x = 'Health_Score', color="Customer Success Associate",
-                               marginal="box", # or violin, rug
-                               hover_data=num_lis)
-        st.plotly_chart(fig_hist)
+  
             
     #df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
     #df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
