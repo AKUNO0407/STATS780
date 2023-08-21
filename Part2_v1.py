@@ -9,6 +9,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff 
 from natsort import natsorted
+import matplotlib.pyplot as plt
 
 from Data_Prep import normalize, data_prep, calculate_health_score
 
@@ -244,6 +245,7 @@ def customer_accounts_view(data):
     col1, col2 = st.columns([5, 2])
     
     col1.subheader("Health Scores Chart")
+    
 
     fig_hs_hist, ax = plt.subplots()
     ax.hist(filtered_data_csa['Health_Score'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
