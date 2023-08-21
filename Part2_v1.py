@@ -96,6 +96,7 @@ def customer_accounts_view(data1):
         elif row['Health_Score'] >= 70:
             return ['background-color: green'] * len(row)
 
+
     col1, col2, col3 = st.columns([1, 2, 2])
 
     with col1:
@@ -178,19 +179,47 @@ def customer_accounts_view(data1):
 
 
 
-    cl1, cl2, cl3 = st.columns([1, 2,1])
+    cl1, cl2 = st.columns([1, 3])
     filtered_data_csa['Unique Location ID'] = filtered_data_csa['Unique Location ID'].astype(str)
+        
+    comp_opration = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']
+    comp_satisf = ['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]
+    comp_finance = ['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']
+    opration_25p = np.percentile(data1[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]), 25)
+    satisf_25p =  np.percentile(data1[['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]), 25)
+    finance_25p =  np.percentile(data1[['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']].dot([10,20,25]), 25)
 
+    df_opration_25p = filtered_data_csa[filtered_data_csa[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]) < opration_25p]
+    df_satisf_25p =  filtered_data_csa[filtered_data_csa[['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]) < satisf_25p]
+    df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']].dot([10,20,25]) < finance_25p]
+    df_churn = filtered_data_csa[filtered_data_csa['Churned'] == 1]
+    col_comp = ['Parent Restaurant name','Unique Location ID'] + comp + ['Health_Score']
+        
     with cl1:
         #col2.subheader("by Restaurant and Location")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
+   # with cl2:
+   #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
     with cl2:
-        st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
-    with cl3:
-        cl3.subheader("Churned Customers")
-        st.dataframe(filtered_data_csa[filtered_data_csa['Churned'] == 1][comp + ['Health_Score']])
 
- 
+        seg = st.radio(
+            "Select one of the segments below: ",
+            ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers')) 
+        if genre == 'Operational Issue':
+            cl3.subheader("Customers with Operational Issues")
+            st.dataframe(df_opration_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        elif genre == 'Customer Satisfaction':
+            cl3.subheader("Customers with Engagement Issue")
+            st.dataframe(df_satisf_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        elif genre == 'Financial Issue':
+            cl3.subheader("Customers with Financial Issue")
+            st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        else:
+            cl3.subheader("Churned Customers")
+            st.dataframe(df_churn[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
+        
+                
+        
     
     c_avg1, c_avg2 = st.columns([1,1])
     
