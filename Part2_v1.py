@@ -197,8 +197,9 @@ def customer_accounts_view(data1):
     col_comp = ['Parent Restaurant name','Unique Location ID'] + comp + ['Health_Score']
         
     with cl1:
-        st.markdown('Customers with health score lower than 45 are red colored,')
+        st.markdown('Customers with health score lower than 45 are red colored,and higher than 70 are green hightighted.')
         st.markdown('and higher than 70 are green hightighted.')
+            
      #   st.markdown("This text is :red[colored red], and this is **:blue[colored]** and bold.")
             
         cl1.subheader("Health Scores by Restaurants")
@@ -209,7 +210,8 @@ def customer_accounts_view(data1):
 
         seg = st.radio(
             "Select one of the segments below: ",
-            ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers')) 
+            ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers'),
+                horizontal = True) 
         if seg == 'Operational Issue':
             cl2.subheader("Customers with Operational Issues")
             st.dataframe(df_opration_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
