@@ -93,9 +93,9 @@ def customer_accounts_view(data1):
 
     def color_coding(row):
         if row['Health_Score'] <= 45:
-            return 'background-color: red'
+            return ['background-color: red']
         elif row['Health_Score'] >= 70:
-            return 'background-color: green'
+            return ['background-color: green']
 
 
     col1, col2, col3 = st.columns([1, 2, 2])
