@@ -115,11 +115,11 @@ def aggregated_performance_view(data):
 
     
 
-    df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
-    df_gp['Avg Health Score'] = data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
-    df_gp['Number of location'] = data.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
+#    df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
+#    df_gp['Avg Health Score'] = data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
+#    df_gp['Number of location'] = data.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
     
-    st.dataframe(round(df_gp,2))
+#    st.dataframe(round(df_gp,2))
 
 
 
@@ -240,14 +240,26 @@ def customer_accounts_view(data):
 
 
     
-   # st.subheader("Associate Aggregate Information")
 
-    col1, col2 = st.columns([3, 1])
+    col1, col2 = st.columns([5, 2])
     
     col1.subheader("Health Scores Chart")
-    col1.line_chart(filtered_data_csa['Health_Score'])
+
+    fig_hs_hist, ax = plt.subplots()
+    ax.hist(filtered_data_csa['Health_Score'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
     
-    col2.subheader("A narrow column with the data")
+    avg_hs = round(data['Health_Score'].mean(),2)
+    
+    ax.axvline(avg_hs, color='red', linestyle='dashed', linewidth=2, label='Average')
+    ax.set_xlabel('Health Score')
+    ax.set_ylabel('Frequency')
+    ax.set_title('Health Score Distribution with Average Line')
+    ax.legend()
+    
+    col1.pyplot(fig_hs_hist)
+   # col1.line_chart(filtered_data_csa['Health_Score'])
+    
+    col2.subheader("Health Scores by Location")
     col2.write(filtered_data_csa[['Unique Location ID', 'Health_Score']])
 
 
