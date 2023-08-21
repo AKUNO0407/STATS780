@@ -133,6 +133,12 @@ def customer_accounts_view(data):
     associate_names = data1['Customer Success Associate'].str.strip().unique()
     selected_associate = st.sidebar.selectbox("Select Associate", associate_names)
     filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
+
+    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
+    trend_names = list(trends_dic.keys())
+    selected_res = st.selectbox("Select Restaurant Name", res_lis)
+    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+        
     
     trends_dic = {
             "Total Orders":orders_col,
@@ -193,12 +199,6 @@ def customer_accounts_view(data):
         st.plotly_chart(fig)
 
     with c_avg2:
-        
-        res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
-        trend_names = list(trends_dic.keys())
-        selected_res = st.selectbox("Select Restaurant Name", res_lis)
-        filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
-        
         
         df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T  
         #st.line_chart(filtered_data_res.T, x = natsorted(df_res_trend.index))
