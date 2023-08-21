@@ -161,7 +161,7 @@ def customer_accounts_view(data):
             df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
         else:
             df_avg_trend[i] = list(data1[trends_dic[i]].mean())
-            df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
+            df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
 
 
     
