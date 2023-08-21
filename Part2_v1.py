@@ -242,7 +242,7 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2, col3, col4 = st.columns([2, 1,1,1])
+    col1, col2, col3 = st.columns([2, 1,2])
 
     def color_coding(row):
         if row['Health_Score'] <= 45:
@@ -274,10 +274,10 @@ def customer_accounts_view(data):
     
         st.plotly_chart(fig_hs_hist,use_container_width=True)
 
-    with col3:
+    with col2:
         #col2.subheader("by Restaurant and Location")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
-    with col4:
+    with col3:
         st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
 
