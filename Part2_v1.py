@@ -155,92 +155,93 @@ def customer_accounts_view(data):
             df_avg_trend[i] = list(data1[trends_dic[i]].mean())
 
 
-    st.title("Average Trend Line Chart")
+    
+    c_avg1, c_avg2 = st.columns([1,1])
+    
+    with c_avg1:
+        #st.title("Average Trend Line Chart")
 
     # Create the line chart using Plotly
-    fig = go.Figure()
+        fig = go.Figure()
     
     # Add traces for Total Orders and Average Order Value
-    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Total Orders'],
-                         mode='lines+markers', name='Total Orders'))
-    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Average Order Value'],
-                             mode='lines+markers', name='Average Order Value'))
-    
-    # Create a second y-axis
-    fig.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
-                      yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
-                                  overlaying='y', side='right'))
-    
-    # Add traces for the second y-axis
-    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Missed Orders'],
-                             mode='lines+markers', name='Missed Orders', yaxis='y2'))
-    #fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Number Change Rate'],
-    #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
-    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Discrepancy'],
-                             mode='lines+markers', name='Discrepancy', yaxis='y2'))
-    fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Cancellation Rates'],
-                             mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
-    
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Total Orders'],
+                             mode='lines+markers', name='Total Orders'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Average Order Value'],
+                                 mode='lines+markers', name='Average Order Value'))
+        
+        # Create a second y-axis
+        fig.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
+                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
+                                      overlaying='y', side='right'))
+        
+        # Add traces for the second y-axis
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Missed Orders'],
+                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
+        #fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Number Change Rate'],
+        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Order Discrepancy'],
+                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
+        fig.add_trace(go.Scatter(x=df_avg_trend.index, y=df_avg_trend['Cancellation Rates'],
+                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
+        
     # Set layout and display the line chart
-    fig.update_layout(title="Average Trend Line Chart",
-                      xaxis=dict(title="Weeks"),
-                      legend=dict(x=0.7, y=0.95))
-    
-    st.plotly_chart(fig)
+        fig.update_layout(title="Average Trend Line Chart",
+                          xaxis=dict(title="Weeks"),
+                          legend=dict(x=0.7, y=0.95))
+        
+        st.plotly_chart(fig)
 
-
-
+    with c_avg2:
+        
+        res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
+        trend_names = list(trends_dic.keys())
+        selected_res = st.selectbox("Select Restaurant Name", res_lis)
+        filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+        
+        
+        df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T  
+        #st.line_chart(filtered_data_res.T, x = natsorted(df_res_trend.index))
     
-
-
-    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
-    trend_names = list(trends_dic.keys())
-    selected_res = st.selectbox("Select Restaurant Name", res_lis)
-    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+        for i in trends_dic.keys():
+            if i == "Order Number Change Rate" :
+                df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
+            else:
+                df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
     
     
-    df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T  
-    #st.line_chart(filtered_data_res.T, x = natsorted(df_res_trend.index))
-
-    for i in trends_dic.keys():
-        if i == "Order Number Change Rate" :
-            df_res_trend[i] = [0] + list(filtered_data_res[trends_dic[i]].mean())
-        else:
-            df_res_trend[i] = list(filtered_data_res[trends_dic[i]].mean())
-
-
-    st.title("Average Trend Line Chart For Selected Restaurant")
-
-    # Create the line chart using Plotly
-    fig_res = go.Figure()
+        #st.title("Average Trend Line Chart For Selected Restaurant")
     
-    # Add traces for Total Orders and Average Order Value
-    fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Total Orders'],
-                         mode='lines+markers', name='Total Orders'))
-    fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Average Order Value'],
-                             mode='lines+markers', name='Average Order Value'))
-    
-    # Create a second y-axis
-    fig_res.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
-                      yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
-                                  overlaying='y', side='right'))
-    
-    # Add traces for the second y-axis
-    fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Missed Orders'],
-                             mode='lines+markers', name='Missed Orders', yaxis='y2'))
-    #fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Number Change Rate'],
-    #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
-    fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Discrepancy'],
-                             mode='lines+markers', name='Discrepancy', yaxis='y2'))
-    fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Cancellation Rates'],
-                             mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
-    
-    # Set layout and display the line chart
-    fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
-                      xaxis=dict(title="Weeks"),
-                      legend=dict(x=0.7, y=0.95))
-    
-    st.plotly_chart(fig_res)
+        # Create the line chart using Plotly
+        fig_res = go.Figure()
+        
+        # Add traces for Total Orders and Average Order Value
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Total Orders'],
+                             mode='lines+markers', name='Total Orders'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Average Order Value'],
+                                 mode='lines+markers', name='Average Order Value'))
+        
+        # Create a second y-axis
+        fig_res.update_layout(yaxis=dict(title='Total Orders and Average Order Value'),
+                          yaxis2=dict(title='Missed Orders, Change Rate, Discrepancy, Cancellation Rates',
+                                      overlaying='y', side='right'))
+        
+        # Add traces for the second y-axis
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Missed Orders'],
+                                 mode='lines+markers', name='Missed Orders', yaxis='y2'))
+        #fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Number Change Rate'],
+        #                         mode='lines+markers', name='Change Rate', yaxis='y2'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Order Discrepancy'],
+                                 mode='lines+markers', name='Discrepancy', yaxis='y2'))
+        fig_res.add_trace(go.Scatter(x=df_res_trend.index, y=df_res_trend['Cancellation Rates'],
+                                 mode='lines+markers', name='Cancellation Rates', yaxis='y2'))
+        
+        # Set layout and display the line chart
+        fig_res.update_layout(title="Average Trend Line Chart by Associate/Restaurant",
+                          xaxis=dict(title="Weeks"),
+                          legend=dict(x=0.7, y=0.95))
+        
+        st.plotly_chart(fig_res)
     
 
 
