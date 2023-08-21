@@ -19,6 +19,7 @@ data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 data_pre = data_prep(data_raw)
 
 data = calculate_health_score(data_pre)
+data1 = data.fillna(0)
 
 comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Total_Order_Value_norm',
         'Payment Status Score', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Highest Product Score']
@@ -37,6 +38,15 @@ for iclm in data.columns.to_list():
 data[feat_num] = data[feat_num].astype(float)  
 num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_Orders',
           'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
+
+trends_dic = {
+            "Total Orders":orders_col,
+            "Average Order Value": avg_val_col,
+            "Missed Orders": missed_rate,
+            "Order Number Change Rate":orders_change_rate,
+            "Order Discrepancy": orders_discrepancy_rate,
+            "Cancellation Rates": cancellation_rate
+}   
 
 orders_col = data.columns[data.columns.map(lambda x: x.startswith("Orders Week"))]
 orders_col = natsorted(orders_col)
@@ -65,98 +75,13 @@ def authenticate(username, password):
 
 
 
-def aggregated_performance_view(data):
     
-    # f_data = filtered_data if selected_item == 'Overall' else filtered_data[filtered_data['Payment Status'] == selected_item]
-
-    st.subheader("Overall Health Score Information")
-    
-    
-    heal_perc = data[data['Health_Score'] >= 70]['Health_Score'].count()/len(data['Health_Score']) * 100
-    
-    col1, col2, col3, col4, col5 = st.columns(5)
-    col1.metric(label="Average Health Score", value=round(data['Health_Score'].mean(),2), delta= round(data['Health_Score'].mean()-55, 2))
-    col2.metric(label="Healthy Customer (>=70) %", value= round(heal_perc,2), delta= round(heal_perc - 12, 2))
-    col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
-                delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
-    col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
-                delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
-    col5.metric(label="Num of Churn", value=data['Churned'].sum(), delta= data['Churned'].sum()-1000)
-    st.info('The charts presented above are intended for illustrative purposes only. Dynamic charts can be generated once additional data is obtained.', icon="ℹ️")
-
-
-    
-    ca1, ca2 = st.columns([7, 3])
-
-    with ca1:
-        #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
-        #fig = go.Figure()
-        #fig.add_trace(fig_health_score_distribution.data[0])
-        #fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
-        hist_data = [data['Health_Score']]
-        group_labels = ['Health_Score'] 
-        
-        fig = ff.create_distplot(hist_data,group_labels)
-        st.plotly_chart(fig)
-    with ca2:
-        
-        fig2 =go.Figure(go.Sunburst(
-            labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
-                          'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
-            parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
-                     'Weights','Weights', 'Weights', 'Weights',
-                         'Weights', 'Weights'],
-            values=[130,10, 5, 5, 10, 25, 20, 20, 25, 10, 20],
-            marker=dict(colors= ["", '#e65d5d', '#ffa4a4','#ffb7a4','#ff7676','#5fc1d8','#7fcde0','#9fc5e8','#4c9aad','#afdeec','#7fb2e0']),
-            branchvalues="total"
-        ))
-        fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
-                #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
-                #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
-
-        st.plotly_chart(fig2, use_container_width=True)
-    
-
-
-    
-
-#    df_gp = data.groupby(['Parent Restaurant name'])[num_lis].sum()
-#    df_gp['Avg Health Score'] = data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
-#    df_gp['Number of location'] = data.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
-    
-#    st.dataframe(round(df_gp,2))
-
-
-
-
-
-
 
 
 def customer_accounts_view(data):
  
     st.subheader("Metrics by CSA/Restaurant")
-    data1 = data.fillna(0)
     
-    trends_dic = {
-            "Total Orders":orders_col,
-            "Average Order Value": avg_val_col,
-            "Missed Orders": missed_rate,
-            "Order Number Change Rate":orders_change_rate,
-            "Order Discrepancy": orders_discrepancy_rate,
-            "Cancellation Rates": cancellation_rate
-        }    
-
-    
-    associate_names = data1['Customer Success Associate'].str.strip().unique()
-    selected_associate = st.selectbox("Select Associate", associate_names)
-    filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
-    
-    res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
-    trend_names = list(trends_dic.keys())
-    selected_res = st.selectbox("Select Restaurant Name", res_lis)
-    filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
-
     
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     df_res_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
@@ -332,16 +257,70 @@ def main():
     st.title('Customer Success Dashboard - Welcome')
 
 
-    aggregated_performance_view(data)
+    '''
+    Aggregate
+    '''
 
-  
+    st.subheader("Overall Health Score Information")
+    
+    
+    heal_perc = data[data['Health_Score'] >= 70]['Health_Score'].count()/len(data['Health_Score']) * 100
+    
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col1.metric(label="Average Health Score", value=round(data['Health_Score'].mean(),2), delta= round(data['Health_Score'].mean()-55, 2))
+    col2.metric(label="Healthy Customer (>=70) %", value= round(heal_perc,2), delta= round(heal_perc - 12, 2))
+    col3.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
+                delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
+    col4.metric(label="Avg Weekly Order Number", value=round(data[orders_col[-1]].mean(), 0), 
+                delta= round((data[orders_col[-2]].mean() - data[orders_col[-1]].mean()), 0))
+    col5.metric(label="Num of Churn", value=data['Churned'].sum(), delta= data['Churned'].sum()-1000)
+    st.info('The charts presented above are intended for illustrative purposes only. Dynamic charts can be generated once additional data is obtained.', icon="ℹ️")
+
+
+    
+    ca1, ca2 = st.columns([7, 3])
+
+    with ca1:
+        #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
+        #fig = go.Figure()
+        #fig.add_trace(fig_health_score_distribution.data[0])
+        #fig.update_layout(title='Aggregated Performance', barmode='overlay', showlegend=False)
+        hist_data = [data['Health_Score']]
+        group_labels = ['Health_Score'] 
+        
+        fig = ff.create_distplot(hist_data,group_labels)
+        st.plotly_chart(fig)
             
-    #df_gp = data.groupby(['Customer Success Associate'])[num_lis].sum()
-    #df_gp[['Avg Retention Score','Avg Health Score']] = data.groupby(['Customer Success Associate'])[['Retention Score','Health_Score']].mean()
-    #df_gp['Number of location'] = data.groupby(['Customer Success Associate'])['Unique Location ID'].count()
-    #st.dataframe(round(df_gp, 2))
+    with ca2:
+        
+        fig2 =go.Figure(go.Sunburst(
+            labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
+                          'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
+            parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
+                     'Weights','Weights', 'Weights', 'Weights',
+                         'Weights', 'Weights'],
+            values=[130,10, 5, 5, 10, 25, 20, 20, 25, 10, 20],
+            marker=dict(colors= ["", '#e65d5d', '#ffa4a4','#ffb7a4','#ff7676','#5fc1d8','#7fcde0','#9fc5e8','#4c9aad','#afdeec','#7fb2e0']),
+            branchvalues="total"
+        ))
+        fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+                #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
+                #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+
+        st.plotly_chart(fig2, use_container_width=True)
+
+    with ca3:
+
+        associate_names = data1['Customer Success Associate'].str.strip().unique()
+        selected_associate = st.selectbox("Select Associate", associate_names)
+        filtered_data_csa = data1[(data['Customer Success Associate'].str.strip() == selected_associate)]
             
-    #filtered_data_as = data[data['Customer Success Associate'].str.strip() == username]
+        res_lis = list(filtered_data_csa['Parent Restaurant name'].unique())+['Overall']
+        trend_names = list(trends_dic.keys())
+        selected_res = st.selectbox("Select Restaurant Name", res_lis)
+        filtered_data_res = filtered_data_csa if selected_res == 'Overall' else filtered_data_csa[(filtered_data_csa['Parent Restaurant name'] == selected_res)]
+      
+
 
     customer_accounts_view(data)
 
