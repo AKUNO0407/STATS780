@@ -105,13 +105,19 @@ def calculate_health_score(df1):
 
 
     health_score_lis = []
+    dis_lis = []
+    canc_lis = []
+    miss_lis = []
+    pmt_lis = []
+    del_lis = []
+    pdct_lis = []
     
     for i in range(df1.shape[0]):
         row = df1.iloc[i]
         if row['Total_Orders'] != 0:
-            order_disc_rate = (int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']) 
-            cancellation_rate = int(row['Total_Cancellation']) / int(row['Total_Orders'])
-            missed_rate = int(row['Total_Missed'] ) / int(row['Total_Orders'])
+            order_disc_rate = round((int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']),2) 
+            cancellation_rate = round(int(row['Total_Cancellation']) / int(row['Total_Orders']) ,2)
+            missed_rate = round(int(row['Total_Missed'] ) / int(row['Total_Orders']), 2)
         else:
             order_disc_rate = cancellation_rate = missed_rate = 0
         
@@ -135,7 +141,7 @@ def calculate_health_score(df1):
         # More delivery partners may indicate more product nt65eeds 
         del_partner_score = row['Number of online delivery partners']/df1['Number of online delivery partners'].max()
         
-        high_product_score = row['Highest Product_num']/df1['Highest Product_num'].max()
+        high_product_score = round(row['Highest Product_num']/df1['Highest Product_num'].max(),2)
     
         # Calculate the final health score
         health_score = (
@@ -155,9 +161,19 @@ def calculate_health_score(df1):
             
         )
         health_score_lis.append(round(health_score,2))
+        dis_lis.append(round(order_disc_rate,2))
+        canc_lis.append(round(cancellation_rate,2))
+        miss_lis.append(round(missed_rate,2))
+        pmt_lis.append(round(payment_status_score,2))
+        del_lis.append(round(del_partner_score,2))
+        pdct_lis.append(round(high_product_score,2))
        # print (weights['Retention Score'] * retention_score)
-        df1['Health_Score'] = pd.DataFrame(health_score_lis)
         
+    df1[['Order Discrepancy','Cancellation Rate', 'Missed Orders Rate','Payment Status Score','Delivery Partner Score',
+             'Highest Product Score']] = pd.DataFrame([dis_lis,canc_lis, miss_lis, pmt_lis,del_lis, pdct_lis]).T
+
+    df1['Health_Score'] = pd.DataFrame(health_score_lis)
+    
     return df1
 
 
