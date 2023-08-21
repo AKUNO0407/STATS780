@@ -246,7 +246,7 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2, col3 = st.columns([2, 1,2])
+    col1, col2 = st.columns([2, 1])
 
     def color_coding(row):
         if row['Health_Score'] <= 45:
@@ -279,46 +279,46 @@ def customer_accounts_view(data):
         st.plotly_chart(fig_hs_hist,use_container_width=True)
 
     with col2:
+        ## Radar
+        col2.subheader("Score Components: Agg v.s. Selected Res")
+        fig_radar = go.Figure()
+        
+        fig_radar.add_trace(go.Scatterpolar(
+              r=data1[comp].mean(),
+              theta=comp,
+              fill='toself',
+              name='Overall Avg'
+        ))
+        fig_radar.add_trace(go.Scatterpolar(
+              r=filtered_data_res[comp].mean(),
+              theta=comp,
+              fill='toself',
+              name='By CSA/Restaurant'
+        ))
+        
+        fig_radar.update_layout(
+          polar=dict(
+            radialaxis=dict(
+              visible=True,
+              range=[0, 1]
+            )),
+          showlegend=True
+        )
+        
+        st.plotly_chart(fig_radar)
+
+
+
+
+    cl1, cl2 = st.columns([1, 2])
+
+    with cl1:
         #col2.subheader("by Restaurant and Location")
         st.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
-    with col3:
+    with cl2:
         st.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
-    ## Radar
-
     
-    fig_radar = go.Figure()
-    
-    fig_radar.add_trace(go.Scatterpolar(
-          r=data1[comp].mean(),
-          theta=comp,
-          fill='toself',
-          name='Overall'
-    ))
-    fig_radar.add_trace(go.Scatterpolar(
-          r=filtered_data_res[comp].mean(),
-          theta=comp,
-          fill='toself',
-          name='By CSA/Restaurant'
-    ))
-    
-    fig_radar.update_layout(
-      polar=dict(
-        radialaxis=dict(
-          visible=True,
-          range=[0, 1]
-        )),
-      showlegend=True
-    )
-    
-    st.plotly_chart(fig_radar)
-
-
-
-
-
-
-
 
     
     
