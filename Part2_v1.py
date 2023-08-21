@@ -139,10 +139,10 @@ def customer_accounts_view(data):
     df_avg_trend = pd.DataFrame(columns = [f'Week_{i}' for i in range(1,len(orders_col)+1)]).T
     data1 = data.fillna(0)
     for i in trends_dic.keys():
-    if i == "Order Number Change Rate" :
-        df_avg_trend[i] = [0] + list(data1[trends_dic[i]].mean())
-    else:
-        df_avg_trend[i] = list(data1[trends_dic[i]].mean())
+        if i == "Order Number Change Rate" :
+            df_avg_trend[i] = [0] + list(data1[trends_dic[i]].mean())
+        else:
+            df_avg_trend[i] = list(data1[trends_dic[i]].mean())
 
 
     # Title
