@@ -242,7 +242,7 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2 = st.columns([2, 1])
+    col1, col2, col3 = st.columns([1, 1,1])
     
     col1.subheader("Health Scores Chart")
     
@@ -267,37 +267,10 @@ def customer_accounts_view(data):
     col1.plotly_chart(fig_hs_hist)
    # col1.line_chart(filtered_data_csa['Health_Score'])
     
-    col2.subheader("Health Scores by Location")
-    col2.write(filtered_data_csa[['Unique Location ID', 'Health_Score']])
+    col2.subheader("Health Scores by Restaurant and Location")
+    col2.write(filtered_data_csahs[['Parent Restaurant name', 'Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name']).mean())
+    col3.write(filtered_data_csa[['Unique Location ID', 'Health_Score']]).groupby(['Unique Location ID']).mean())
 
-
-
-    
-    c1, c2 = st.columns([1, 3])
-
-        
-    max_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].max()]['Unique Location ID']
-    min_loc = filtered_data[filtered_data['Health_Score'] == filtered_data['Health_Score'].min()]['Unique Location ID']
-    
-    overall_info = {
-        'Mean Health Score': filtered_data['Health_Score'].mean(),
-        'Min Health Score': filtered_data['Health_Score'].min(),
-        'Max Health Score': filtered_data['Health_Score'].max(),
-        'Client With Max Score': max_loc.values[0],
-        'Client With Min Score': min_loc.values[0]
-        }
-    c1.write(overall_info)   
-    c2.subheader("A narrow column with the data")
-    df_gp = filtered_data.groupby(['Parent Restaurant name'])[num_lis].sum()
-    df_gp['Avg Health Score'] = filtered_data.groupby(['Parent Restaurant name'])['Health_Score'].mean()
-    df_gp['Number of location'] = filtered_data.groupby(['Parent Restaurant name'])['Unique Location ID'].count()
-    
-    c2.dataframe(round(df_gp,2))
-    
-    #fig = px.bar(filtered_data, x='Unique Location ID', y='Health_Score', 
-    #             title=f'Health Scores',
-    #             labels={'Health Score': 'Health Score (0 to 100)'})
-    #st.plotly_chart(fig)
 
     
     
