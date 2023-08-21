@@ -38,13 +38,13 @@ orders_col = natsorted(orders_col)
 avg_val_col = data.columns[data.columns.map(lambda x: x.startswith("Average Order"))]
 avg_val_col = natsorted(avg_val_col)
 missed_rate = data.columns[data.columns.map(lambda x: x.startswith("Missed_Rate"))]
-missed_rate = natsorted(missed_col)
+missed_rate = natsorted(missed_rate)
 orders_change_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Change"))]
 orders_change_rate = natsorted(orders_change_rate)
 orders_discrepancy_rate = data.columns[data.columns.map(lambda x: x.startswith("Orders_Discrepancy"))]
 orders_discrepancy_rate = natsorted(orders_discrepancy_rate)
 cancellation_rate = data.columns[data.columns.map(lambda x: x.startswith("Cancellation_Rate"))]
-cancellation_rate = natsorted(cancellation_col)
+cancellation_rate = natsorted(cancellation_rate)
 
 
 class SessionState:
