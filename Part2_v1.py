@@ -269,7 +269,7 @@ def customer_accounts_view(data):
     
     col2.subheader("Health Scores by Restaurant and Location")
     col2.write(filtered_data_csahs[['Parent Restaurant name', 'Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name']).mean())
-    col3.write(filtered_data_csa[['Unique Location ID', 'Health_Score']]).groupby(['Unique Location ID']).mean())
+    col3.write(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean())
 
 
     
