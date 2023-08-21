@@ -85,7 +85,7 @@ def authenticate(username, password):
     
 
 
-def customer_accounts_view(data):
+def customer_accounts_view(data1):
         
     st.subheader("Metrics by CSA/Restaurant")
     
@@ -328,7 +328,7 @@ def main():
 
 
 
-    customer_accounts_view(data)
+    customer_accounts_view(data1)
 
     # Display additional content here
 
