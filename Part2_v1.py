@@ -242,34 +242,41 @@ def customer_accounts_view(data):
 
     
 
-    col1, col2, col3 = st.columns([1, 1,1])
-    
-    col1.subheader("Health Scores Chart")
-    
-  #  fig_hs_hist, ax = plt.subplots(figsize=(8,5))
-  #  ax.hist(filtered_data_csa['Health_Score'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+    col1, col2, col3 = st.columns([2, 1,2])
 
-    fig_hs_hist = px.histogram(
-        filtered_data_csa,
-        x='Health_Score',
-        nbins=20,
-        title='Health Score Distribution with Average Line'
-    )
-    avg_hs = round(data['Health_Score'].mean(),2)
-    fig_hs_hist.add_vline(x=avg_hs, line_dash="dash", line_color="red", name="Average")
+    def color_coding(row):
+        return ['background-color:red'] * len(
+            row) if row['Health_Score'] <= 45 else ['background-color:green'] * len(row) if row['Health_Score'] >= 70
 
-#    ax.axvline(avg_hs, color='red', linestyle='dashed', linewidth=2, label='Average')
-#    ax.set_xlabel('Health Score')
-#    ax.set_ylabel('Frequency')
-#    ax.set_title('Health Score Distribution with Average Line')
-#    ax.legend()
     
-    col1.plotly_chart(fig_hs_hist)
-   # col1.line_chart(filtered_data_csa['Health_Score'])
+    with col1:
+        col1.subheader("Health Scores Chart")
     
-    col2.subheader("Health Scores by Restaurant and Location")
-    col2.write(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean())
-    col3.write(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean())
+      #  fig_hs_hist, ax = plt.subplots(figsize=(8,5))
+      #  ax.hist(filtered_data_csa['Health_Score'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+
+        fig_hs_hist = px.histogram(
+            filtered_data_csa,
+            x='Health_Score',
+            nbins=20,
+            title='Health Score Distribution with Average Line'
+        )
+        avg_hs = round(data['Health_Score'].mean(),2)
+        fig_hs_hist.add_vline(x=avg_hs, line_dash="dash", line_color="red", name="Average")
+    
+    #    ax.axvline(avg_hs, color='red', linestyle='dashed', linewidth=2, label='Average')
+    #    ax.set_xlabel('Health Score')
+    #    ax.set_ylabel('Frequency')
+    #    ax.set_title('Health Score Distribution with Average Line')
+    #    ax.legend()
+    
+        st.plotly_chart(fig_hs_hist)
+
+    with col2:
+        #col2.subheader("by Restaurant and Location")
+        col2.dataframe(filtered_data_csa[['Parent Restaurant name', 'Health_Score']].groupby(['Parent Restaurant name']).mean().style.apply(color_coding, axis=1))
+    with col3:
+        col3.dataframe(filtered_data_csa[['Unique Location ID', 'Health_Score']].groupby(['Unique Location ID']).mean().style.apply(color_coding, axis=1))
 
 
     
