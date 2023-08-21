@@ -112,8 +112,8 @@ def aggregated_performance_view(data):
         st.plotly_chart(fig2, use_container_width=True)
     
 
-    cb1, cb2 = st.columns([1, 4])
-    with cb1:
+#    cb1, cb2 = st.columns([1, 4])
+#    with cb1:
 #        max_loc = data[data['Health_Score'] == data['Health_Score'].max()]['Unique Location ID']
 #        min_loc = data[data['Health_Score'] == data['Health_Score'].min()]['Unique Location ID']
 #        
@@ -128,7 +128,7 @@ def aggregated_performance_view(data):
 
         
 
-    with cb2:
+#    with cb2:
 #        st.dataframe(round(data.describe(),2))
 
     
