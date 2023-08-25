@@ -45,8 +45,8 @@ def data_prep(df1):
     retention_window = today_j - act_min
   
   # Calculate time since activation and retention score
-    df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
-    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0))
+    df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date']
+    df1['Retention Score'] = df1['Loyalty'].apply(lambda x: min(x / retention_window, 1.0))
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
