@@ -353,7 +353,7 @@ def main():
     with ca2:
         
         fig2 =go.Figure(go.Sunburst(
-            labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
+            labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score',
                           'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'MRR Score'],
             parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
                      'Weights','Weights', 'Weights', 'Weights',
