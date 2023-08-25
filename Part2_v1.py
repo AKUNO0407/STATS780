@@ -358,7 +358,7 @@ def main():
             parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
                      'Weights','Weights', 'Weights', 'Weights',
                          'Weights', 'Weights'],
-            values=[130,10, 5, 5, 10, 25, 20, 20, 25, 10, 20],
+            values=[130,10, 5, 10, 20, 30, 30, 25, 10, 30],
             marker=dict(colors= ["", '#e65d5d', '#ffa4a4','#ffb7a4','#ff7676','#5fc1d8','#7fcde0','#9fc5e8','#4c9aad','#afdeec','#7fb2e0']),
             branchvalues="total"
         ))
