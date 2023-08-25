@@ -19,7 +19,8 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
-    df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
+    df1['Last Product Usage Date'].fillna(0)
+    df1['Activation Date'].fillna(0)
     
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
@@ -50,7 +51,7 @@ def data_prep(df1):
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
-
+    df1['Loyalty'].fillna(0)
   ## Churn Rate: voluntary + involuntary
   ## Assume invol. churned if not active after Aug 2021; vol churn: payment status = cancelled
 
