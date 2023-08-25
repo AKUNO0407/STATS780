@@ -19,7 +19,7 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
-    df1[['Last Product Usage Date', 'Activation Date']] = df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
+    df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
     
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
@@ -60,13 +60,16 @@ def data_prep(df1):
 
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
     df1['Total_Order_Value_norm'] = normalize(df1['Total_Order_Value'],0,1)
-
     df1['Loyalty_norm'] = normalize(df1['Loyalty'],0,1)
     
     df1[['Orders_Change_Rate_{0}'.format(i) for i in range(2,len(orders_col)+1)]] = df1[orders_col].pct_change(axis='columns', periods = 1).iloc[:,1:]
     
     for i in range(1,len(orders_col)+1):
-        df1[f'Orders_Discrepancy_Rate_{i}'] = (df1[f'Orders Week {i}']  - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}']
+        
+        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(df1['# Printers'] != 0,
+                                                       (df1[f'Orders Week {i}'] - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}'],
+                                                       0)
+        
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
         df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
 
