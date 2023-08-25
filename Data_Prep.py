@@ -66,8 +66,8 @@ def data_prep(df1):
     
     for i in range(1,len(orders_col)+1):
         
-        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(((data['# Printers'] != 0) & (data['Orders Week 1'] != 0)),
-                 (data[f'Orders Week 1'] - data[f'Printed Orders Week 1'])/data[f'Orders Week 1'],
+        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(((df1['# Printers'] != 0) & (df1['Orders Week 1'] != 0)),
+                 (df1[f'Orders Week 1'] - df1[f'Printed Orders Week 1'])/df1[f'Orders Week 1'],
                   0)
         
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
