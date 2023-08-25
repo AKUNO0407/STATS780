@@ -329,7 +329,7 @@ def main():
 
 
     
-    ca1, ca2 = st.columns([2, 1])
+    ca1, ca2 = st.columns([3, 1])
 
     with ca1:
         #fig_health_score_distribution = px.histogram(data, x='Health_Score', nbins=10, title='Health Score Distribution')
