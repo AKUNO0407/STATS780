@@ -134,7 +134,7 @@ def calculate_health_score(df1):
         order_value_score = int(row['Total_Order_Value_norm'])
         
         # Activation Date Score: early activation date may indicate stable and loyal partnership
-        loyalty_score = row['Loyalty_norm'] if pd.notna(row['Loyalty_norm']) elso 0
+        loyalty_score = row['Loyalty_norm'] if pd.notna(row['Loyalty_norm']) else 0
     
         retention_score = row['Normalized Retention Score']
         if_churn = row['Churned']
