@@ -229,8 +229,8 @@ def customer_accounts_view(data1):
             cl2.subheader("Customers with Financial Issue")
             st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
         elif seg == 'High Value Customers':
-  #          cl2.subheader("Customers with High Loyalty, Financial Performance and Health Score")
-  #          st.dataframe(df_good_cus[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))        
+            cl2.subheader("Customers with High Loyalty, Financial Performance and Health Score")
+            st.dataframe(df_good_cus[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))        
         else:
             cl2.subheader("Churned Customers")
             st.dataframe(df_churn[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
