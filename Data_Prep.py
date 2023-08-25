@@ -66,9 +66,9 @@ def data_prep(df1):
     
     for i in range(1,len(orders_col)+1):
         
-        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(df1['# Printers'] != 0,
-                                                       (df1[f'Orders Week {i}'] - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}'],
-                                                       0)
+        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(((data['# Printers'] != 0) & (data['Orders Week 1'] != 0)),
+                 (data[f'Orders Week 1'] - data[f'Printed Orders Week 1'])/data[f'Orders Week 1'],
+                  0)
         
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
         df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
@@ -114,11 +114,15 @@ def calculate_health_score(df1):
     pmt_lis = []
     del_lis = []
     pdct_lis = []
+
     
     for i in range(df1.shape[0]):
         row = df1.iloc[i]
         if row['Total_Orders'] != 0:
-            order_disc_rate = round((int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']),2) 
+            order_disc_rate = round(np.where(row['# Printers'] != 0,
+                (int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']),
+                                             0),
+                                    2) 
             cancellation_rate = round(int(row['Total_Cancellation']) / int(row['Total_Orders']) ,2)
             missed_rate = round(int(row['Total_Missed'] ) / int(row['Total_Orders']), 2)
         else:
