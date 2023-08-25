@@ -164,6 +164,7 @@ def calculate_health_score(df1):
             
         )
         health_score_lis.append(round(health_score,2))
+        print(health_score_lis)
         dis_lis.append(round(order_disc_rate,2))
         canc_lis.append(round(cancellation_rate,2))
         miss_lis.append(round(missed_rate,2))
