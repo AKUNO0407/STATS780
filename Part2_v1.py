@@ -307,7 +307,7 @@ def customer_accounts_view(data1):
 
 def main():
 
-    st.set_page_config(layout="wide")
+    #st.set_page_config(layout="wide")
     st.title('Customer Success Dashboard - Welcome')
 
         
