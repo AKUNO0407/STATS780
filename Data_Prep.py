@@ -86,20 +86,19 @@ def calculate_health_score(df1):
     weights = {
         'Order Discrepancy': - 10,
         'Cancellation Rate': - 5,
-        'Missed Orders Rate': - 5,
-        'Churn Score': -10,
+        'Missed Orders Rate': - 10,
+        'Churn Score': -20,
         
-        'Payment Status Score': 25,
         'Order Value Score': 25,
-        'Loyalty Score' : 20,
-        'Retention Score': 20,
-
+        'Loyalty Score' : 30,
+        'Retention Score': 30,
 #        'Feature Adoption': 10,
         'Delivery Partner Score': 10,
-        'Highest Product Score': 20
+        'Highest Product Score': 30
         
     } # weights in percentage
-    
+
+
 
     # order fulfillment and operational efficiency: 
     # significant discrepancy b/w ttl oders and printed orders could be a red flag
@@ -127,7 +126,7 @@ def calculate_health_score(df1):
         
         
         # Payment Status Score: Higher score for 'Active' status
-        payment_status_score = 1 if str(row['Payment Status']) == 'Active' else 0.5
+     #   payment_status_score = 1 if str(row['Payment Status']) == 'Active' else 0.5
         
         # Payment Status Score
         order_value_score = int(row['Total_Order_Value_norm'])
@@ -154,7 +153,6 @@ def calculate_health_score(df1):
             weights['Missed Orders Rate'] * missed_rate + 
             weights['Churn Score'] * if_churn + 
             
-            weights['Payment Status Score'] * payment_status_score +
             weights['Order Value Score'] * order_value_score +
             weights['Loyalty Score'] * loyalty_score +
             weights['Retention Score'] * retention_score +
