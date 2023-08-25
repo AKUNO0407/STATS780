@@ -166,13 +166,13 @@ def calculate_health_score(df1):
         dis_lis.append(round(order_disc_rate,2))
         canc_lis.append(round(cancellation_rate,2))
         miss_lis.append(round(missed_rate,2))
-        pmt_lis.append(round(payment_status_score,2))
+        #pmt_lis.append(round(payment_status_score,2))
         del_lis.append(round(del_partner_score,2))
         pdct_lis.append(round(high_product_score,2))
        # print (weights['Retention Score'] * retention_score)
         
     df1[['Order Discrepancy','Cancellation Rate', 'Missed Orders Rate','Payment Status Score','Delivery Partner Score',
-             'Highest Product Score']] = pd.DataFrame([dis_lis,canc_lis, miss_lis, pmt_lis,del_lis, pdct_lis]).T
+             'Highest Product Score']] = pd.DataFrame([dis_lis,canc_lis, miss_lis,del_lis, pdct_lis]).T
 
     df1['Health_Score'] = pd.DataFrame(health_score_lis)
     
