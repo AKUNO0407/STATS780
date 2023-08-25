@@ -19,8 +19,7 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
-    df1['Last Product Usage Date'].fillna(0)
-    df1['Activation Date'].fillna(0)
+    df1[['Activation Date','Last Product Usage Date']] = df1[['Activation Date','Last Product Usage Date']].fillna(0)
     
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
@@ -47,11 +46,11 @@ def data_prep(df1):
   
   # Calculate time since activation and retention score
     df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
-    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0))
+    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0)).fillna(0)
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
-    df1['Loyalty'].fillna(0)
+    df1['Loyalty'] = df1['Loyalty'].fillna(0)
   ## Churn Rate: voluntary + involuntary
   ## Assume invol. churned if not active after Aug 2021; vol churn: payment status = cancelled
 
