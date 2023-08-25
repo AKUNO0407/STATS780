@@ -19,7 +19,8 @@ def normalize(arr,t_min, t_max):
   
 
 def data_prep(df1):
-    df1[['Last Product Usage Date', 'Activation Date']].fillna(0)
+    df1['Last Product Usage Date'].fillna(0)
+    df1['Activation Date'].fillna(0)
     
     orders_col = df1.columns[df1.columns.map(lambda x: x.startswith("Orders Week"))]
     orders_col = sorted(orders_col, key = lambda sub : sub[-1])
@@ -45,12 +46,12 @@ def data_prep(df1):
     retention_window = today_j - act_min
   
   # Calculate time since activation and retention score
-    df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date']
-    df1['Retention Score'] = df1['Loyalty'].apply(lambda x: min(x / retention_window, 1.0))
+    df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
+    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0))
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
-
+    df1['Loyalty'].fillna(0)
   ## Churn Rate: voluntary + involuntary
   ## Assume invol. churned if not active after Aug 2021; vol churn: payment status = cancelled
 
@@ -65,10 +66,16 @@ def data_prep(df1):
     df1[['Orders_Change_Rate_{0}'.format(i) for i in range(2,len(orders_col)+1)]] = df1[orders_col].pct_change(axis='columns', periods = 1).iloc[:,1:]
     
     for i in range(1,len(orders_col)+1):
-        df1[f'Orders_Discrepancy_Rate_{i}'] = (df1[f'Orders Week {i}']  - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}']
+        
+        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(((df1['# Printers'] != 0) & (df1['Orders Week 1'] != 0)),
+                 (df1[f'Orders Week 1'] - df1[f'Printed Orders Week 1'])/df1[f'Orders Week 1'],
+                  0)
+        
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
         df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
 
+    df1.replace([np.inf, -np.inf], 0, inplace=True)
+    
     return df1
 
 
@@ -102,13 +109,20 @@ def calculate_health_score(df1):
 
 
     health_score_lis = []
+    dis_lis = []
+    canc_lis = []
+    miss_lis = []
+    pmt_lis = []
+    del_lis = []
+    pdct_lis = []
+
     
     for i in range(df1.shape[0]):
         row = df1.iloc[i]
         if row['Total_Orders'] != 0:
-            order_disc_rate = (int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']) 
-            cancellation_rate = int(row['Total_Cancellation']) / int(row['Total_Orders'])
-            missed_rate = int(row['Total_Missed'] ) / int(row['Total_Orders'])
+            order_disc_rate = round((int(row['Total_Orders'])  - int(row['Total_Printed']))/int(row['Total_Orders']),2) if row['# Printers'] != 0 else 0
+            cancellation_rate = round(int(row['Total_Cancellation']) / int(row['Total_Orders']) ,2)
+            missed_rate = round(int(row['Total_Missed'] ) / int(row['Total_Orders']), 2)
         else:
             order_disc_rate = cancellation_rate = missed_rate = 0
         
@@ -120,7 +134,7 @@ def calculate_health_score(df1):
         order_value_score = int(row['Total_Order_Value_norm'])
         
         # Activation Date Score: early activation date may indicate stable and loyal partnership
-        loyalty_score = row['Loyalty_norm'] 
+        loyalty_score = row['Loyalty_norm'] if pd.notna(row['Loyalty_norm']) elso 0
     
         retention_score = row['Normalized Retention Score']
         if_churn = row['Churned']
@@ -132,7 +146,7 @@ def calculate_health_score(df1):
         # More delivery partners may indicate more product nt65eeds 
         del_partner_score = row['Number of online delivery partners']/df1['Number of online delivery partners'].max()
         
-        high_product_score = row['Highest Product_num']/df1['Highest Product_num'].max()
+        high_product_score = round(row['Highest Product_num']/df1['Highest Product_num'].max(),2)
     
         # Calculate the final health score
         health_score = (
@@ -152,11 +166,18 @@ def calculate_health_score(df1):
             
         )
         health_score_lis.append(round(health_score,2))
+        print(health_score_lis)
+        dis_lis.append(round(order_disc_rate,2))
+        canc_lis.append(round(cancellation_rate,2))
+        miss_lis.append(round(missed_rate,2))
+        pmt_lis.append(round(payment_status_score,2))
+        del_lis.append(round(del_partner_score,2))
+        pdct_lis.append(round(high_product_score,2))
        # print (weights['Retention Score'] * retention_score)
-        df1['Health_Score'] = pd.DataFrame(health_score_lis)
         
-    return df1
+    df1[['Order Discrepancy','Cancellation Rate', 'Missed Orders Rate','Payment Status Score','Delivery Partner Score',
+             'Highest Product Score']] = pd.DataFrame([dis_lis,canc_lis, miss_lis, pmt_lis,del_lis, pdct_lis]).T
 
-
-
+    df1['Health_Score'] = pd.DataFrame(health_score_lis)
     
+    return df1
