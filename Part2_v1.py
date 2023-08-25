@@ -211,7 +211,7 @@ def customer_accounts_view(data1):
    #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
     with cl2:
         st.markdown("'Operational Issue', 'Customer Satisfaction', 'Financial Issue': Show customers under 25th percentile within each sector")
-        st.markdown("'High Value Customers': Customers above 75 percentile of Loyalty Score with Health Score >= 70")
+     #   st.markdown("'High Value Customers': Customers above 75 percentile of Loyalty Score with Health Score >= 70")
         st.markdown("'Churned Customers': All the churned customers")
         seg = st.radio(
             "Select one of the segments below: ",
@@ -226,9 +226,9 @@ def customer_accounts_view(data1):
         elif seg == 'Financial Issue':
             cl2.subheader("Customers with Financial Issue")
             st.dataframe(df_finance_25p[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
-        elif seg == 'High Value Customers':
-            cl2.subheader("Customers with High Loyalty and Health Score")
-            st.dataframe(df_good_cus[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))        
+  #      elif seg == 'High Value Customers':
+  #          cl2.subheader("Customers with High Loyalty and Health Score")
+  #          st.dataframe(df_good_cus[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))        
         else:
             cl2.subheader("Churned Customers")
             st.dataframe(df_churn[col_comp].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
