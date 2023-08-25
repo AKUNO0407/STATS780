@@ -351,20 +351,20 @@ def main():
         st.plotly_chart(fig,use_container_width=True)
             
     with ca2:
-        
         fig2 =go.Figure(go.Sunburst(
             labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score',
                           'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'MRR Score'],
-            parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
+            parents=["", "Retention Score","Retention Score","Loyalty Score","Loyalty Score", 
                      'Weights','Weights', 'Weights', 'Weights',
                          'Weights', 'Weights'],
-            values=[150,10, 5, 10, 20, 30, 30, 25, 10, 30],
+            values=[200,10, 5, 10, 20, 30, 30, 25, 10, 30],
             marker=dict(colors= ["", '#e65d5d', '#ffa4a4','#ffb7a4','#ff7676','#5fc1d8','#7fcde0','#9fc5e8','#4c9aad','#afdeec','#7fb2e0']),
             branchvalues="total"
         ))
         fig2.update_layout(margin = dict(t=0, l=0, r=0, b=0))
                 #fig2.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
                 #          marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+
 
         st.plotly_chart(fig2, use_container_width=True)
 
