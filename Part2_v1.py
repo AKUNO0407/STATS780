@@ -212,7 +212,9 @@ def customer_accounts_view(data1):
     with cl2:
         st.markdown(
 "'Operational Issue', 'Customer Satisfaction', 'Financial Issue': Show customers under 25th percentile within each sector \n"
+                
 "'High Value Customers': Customers above 75 percentile of Loyalty Score and Health Score \n"
+                
 "'Churned Customers': All the churned customers"
         )
         seg = st.radio(
