@@ -199,7 +199,7 @@ def customer_accounts_view(data1):
     df_satisf_25p =  filtered_data_csa[filtered_data_csa[['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]) < satisf_25p]
     df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,20,25]) < finance_25p]
     df_churn = filtered_data_csa[filtered_data_csa['Churned'] == 1]
-    df_good_cus = filtered_data_csa[(filtered_data_csa['Loyalty'] >= loyalty_75) & (filtered_data_csa['Health_Score'] >= hs_75)]
+    df_good_cus = filtered_data_csa[(filtered_data_csa['Loyalty'] >= loyalty_75) & (filtered_data_csa['Health_Score'] >= 70)]
     col_comp = ['Parent Restaurant name','Unique Location ID'] + comp + ['Health_Score']
         
     with cl1:
@@ -211,7 +211,7 @@ def customer_accounts_view(data1):
    #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
     with cl2:
         st.markdown("'Operational Issue', 'Customer Satisfaction', 'Financial Issue': Show customers under 25th percentile within each sector")
-        st.markdown("'High Value Customers': Customers above 75 percentile of Loyalty Score and Health Score")
+        st.markdown("'High Value Customers': Customers above 75 percentile of Loyalty Score with Health Score >= 70")
         st.markdown("'Churned Customers': All the churned customers")
         seg = st.radio(
             "Select one of the segments below: ",
