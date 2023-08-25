@@ -189,15 +189,15 @@ def customer_accounts_view(data1):
     comp_opration = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']
     comp_satisf = ['Churned', 'Loyalty_norm','Normalized Retention Score' ]
     comp_finance = ['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']
-    opration_25p = np.percentile(data1[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]), 25)
-    satisf_25p =  np.percentile(data1[['Churned', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]), 25)
-    finance_25p =  np.percentile(data1[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,20,25]), 25)
+    opration_25p = np.percentile(data1[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-10]), 25)
+    satisf_25p =  np.percentile(data1[['Churned', 'Loyalty_norm','Normalized Retention Score' ]].dot([-20,30,30]), 25)
+    finance_25p =  np.percentile(data1[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,30,25]), 25)
     loyalty_75 = np.percentile(data1[['Loyalty']], 75)
     hs_75 = np.percentile(data1[['Health_Score']], 75)
 
-    df_opration_25p = filtered_data_csa[filtered_data_csa[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]) < opration_25p]
-    df_satisf_25p =  filtered_data_csa[filtered_data_csa[['Churned', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]) < satisf_25p]
-    df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,20,25]) < finance_25p]
+    df_opration_25p = filtered_data_csa[filtered_data_csa[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-10]) < opration_25p]
+    df_satisf_25p =  filtered_data_csa[filtered_data_csa[['Churned', 'Loyalty_norm','Normalized Retention Score' ]].dot([-20,30,30]) < satisf_25p]
+    df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,30,25]) < finance_25p]
     df_churn = filtered_data_csa[filtered_data_csa['Churned'] == 1]
     df_good_cus = filtered_data_csa[(filtered_data_csa['Loyalty'] >= loyalty_75) & (filtered_data_csa['Health_Score'] >= 70)]
     col_comp = ['Parent Restaurant name','Unique Location ID'] + comp + ['Health_Score']
