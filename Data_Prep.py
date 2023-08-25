@@ -45,8 +45,8 @@ def data_prep(df1):
     retention_window = today_j - act_min
   
   # Calculate time since activation and retention score
-    df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date']
-    df1['Retention Score'] = df1['Loyalty'].apply(lambda x: min(x / retention_window, 1.0))
+    df1['Time Active'] = df1['Last Product Usage Date'] - df1['Activation Date']
+    df1['Retention Score'] = df1['Time Active'].apply(lambda x: min(x / retention_window, 1.0))
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
 
     df1['Loyalty'] = df1['Last Product Usage Date'] - df1['Activation Date'] #longer the better, but not signif
@@ -66,7 +66,10 @@ def data_prep(df1):
     
     for i in range(1,len(orders_col)+1):
         
-        df1[f'Orders_Discrepancy_Rate_{i}'] = (df1[f'Orders Week {i}'] - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}']
+        df1[f'Orders_Discrepancy_Rate_{i}'] = np.where(df1['# Printers'] != 0,
+                                                       (df1[f'Orders Week {i}'] - df1[f'Printed Orders Week {i}'])/df1[f'Orders Week {i}'],
+                                                       0)
+        
         df1[f'Cancellation_Rate_{i}'] = (df1[f'Cancellations Week {i}'])/df1[f'Orders Week {i}']
         df1[f'Missed_Rate_{i}'] = (df1[f'Missed Orders Week {i}'])/df1[f'Orders Week {i}']
 
@@ -178,4 +181,3 @@ def calculate_health_score(df1):
 
 
 
-    
