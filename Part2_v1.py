@@ -207,7 +207,8 @@ def customer_accounts_view(data1):
    # with cl2:
    #     st.dataframe(filtered_data_csa[['Parent Restaurant name','Unique Location ID', 'Health_Score']].groupby(['Parent Restaurant name','Unique Location ID']).mean().style.apply(color_coding, axis=1))
     with cl2:
-
+        st.markdown("'Operational Issue', 'Customer Satisfaction', 'Financial Issue': Show customers under 25th percentile within each sector \n")
+            
         seg = st.radio(
             "Select one of the segments below: ",
             ('Operational Issue', 'Customer Satisfaction', 'Financial Issue', 'Churned Customers'),
