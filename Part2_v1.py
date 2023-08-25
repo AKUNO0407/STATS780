@@ -25,11 +25,11 @@ data = calculate_health_score(data_pre)
 data['Customer Success Associate'] = data['Customer Success Associate'].astype(str)
 data['Parent Restaurant name'] = data['Parent Restaurant name'].astype(str)
 data['Unique Location ID'] = data['Unique Location ID'].astype(str)
-
+data['MRR Score'] = data['Highest Product_num'].astype(int)
 data1 = data.fillna(0)
 
 comp = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churned','Total_Order_Value_norm',
-        'Payment Status Score', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Highest Product Score']
+        'MRR Score', 'Loyalty_norm','Normalized Retention Score', 'Delivery Partner Score', 'Payment Status Score']
 
 
 feat_num = []
@@ -43,7 +43,7 @@ for iclm in data.columns.to_list():
         feat_obj.append(iclm)
         
 data[feat_num] = data[feat_num].astype(float)  
-num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'Highest Product_num','Total_Orders',
+num_lis = ['# Printers', '# Tablets', 'Number of online delivery partners', 'MRR Score','Total_Orders',
           'Retention Score','Churned','Total_Order_Value','Total_Cancellation','Total_Missed', 'Total_Printed', 'Health_Score']
 
 
@@ -188,14 +188,14 @@ def customer_accounts_view(data1):
         
     comp_opration = ['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']
     comp_satisf = ['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]
-    comp_finance = ['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']
+    comp_finance = ['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']
     opration_25p = np.percentile(data1[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]), 25)
     satisf_25p =  np.percentile(data1[['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]), 25)
-    finance_25p =  np.percentile(data1[['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']].dot([10,20,25]), 25)
+    finance_25p =  np.percentile(data1[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,20,25]), 25)
 
     df_opration_25p = filtered_data_csa[filtered_data_csa[['Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate']].dot([-10,-5,-5]) < opration_25p]
     df_satisf_25p =  filtered_data_csa[filtered_data_csa[['Churned','Payment Status Score', 'Loyalty_norm','Normalized Retention Score' ]].dot([-10,25,20,20]) < satisf_25p]
-    df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'Highest Product Score','Total_Order_Value_norm']].dot([10,20,25]) < finance_25p]
+    df_finance_25p =  filtered_data_csa[filtered_data_csa[['Delivery Partner Score', 'MRR Score','Total_Order_Value_norm']].dot([10,20,25]) < finance_25p]
     df_churn = filtered_data_csa[filtered_data_csa['Churned'] == 1]
     col_comp = ['Parent Restaurant name','Unique Location ID'] + comp + ['Health_Score']
         
@@ -346,7 +346,7 @@ def main():
         
         fig2 =go.Figure(go.Sunburst(
             labels= ["Weights",'Order Discrepancy', 'Cancellation Rate', 'Missed Orders Rate', 'Churn Score', 'Payment Status Score',
-                          'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'Highest Product Score'],
+                          'Loyalty Score', 'Retention Score', 'Order Value Score','Delivery Partner Score', 'MRR Score'],
             parents=["", "Retention Score","Loyalty Score","Loyalty Score","Loyalty Score", 
                      'Weights','Weights', 'Weights', 'Weights',
                          'Weights', 'Weights'],
