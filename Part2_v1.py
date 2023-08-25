@@ -18,9 +18,9 @@ from Data_Prep import normalize, data_prep, calculate_health_score
 data_raw = pd.read_excel('Input_Data_File.xlsx').iloc[:,1:]
 
 data_pre = data_prep(data_raw)
-st.write(data_pre.describe())
+#st.write(data_pre.describe())
 data = calculate_health_score(data_pre)
-st.write(data.describe())
+#st.write(data.describe())
 
 data['Customer Success Associate'] = data['Customer Success Associate'].astype(str)
 data['Parent Restaurant name'] = data['Parent Restaurant name'].astype(str)
