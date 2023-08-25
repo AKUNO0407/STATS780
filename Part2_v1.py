@@ -340,7 +340,7 @@ def main():
         group_labels = ['Health_Score'] 
         
         fig = ff.create_distplot(hist_data,group_labels)
-        st.plotly_chart(fig)
+        st.plotly_chart(fig,use_container_width=True)
             
     with ca2:
         
