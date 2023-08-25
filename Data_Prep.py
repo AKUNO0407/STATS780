@@ -61,7 +61,7 @@ def data_prep(df1):
 
     df1['Normalized Retention Score'] = (df1['Retention Score'] - df1['Retention Score'].min()) / (df1['Retention Score'].max() - df1['Retention Score'].min())
     df1['Total_Order_Value_norm'] = normalize(df1['Total_Order_Value'],0,1)
-    df1['Loyalty_norm'] = (df1['Loyalty'] - df1['Loyalty'].min()) / (df1['Loyalty'].max() - df1['Loyalty'].min())
+    df1['Loyalty_norm'] = (df1['Loyalty'] - df1['Loyalty'].min()) / (df1['Loyalty'].max() - df1['Loyalty'].min()).fillna(0)
     
     df1[['Orders_Change_Rate_{0}'.format(i) for i in range(2,len(orders_col)+1)]] = df1[orders_col].pct_change(axis='columns', periods = 1).iloc[:,1:]
     
